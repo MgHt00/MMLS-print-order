@@ -1,0 +1,9 @@
+#wc-print-buttons-sidebar {
+  margin-top: 20px;
+}
+
+#wc-print-buttons-sidebar .button {
+  margin: 5px 0;
+  display: block;
+  width: 100%;
+}
