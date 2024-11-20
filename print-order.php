@@ -23,11 +23,23 @@ function wc_print_buttons_enqueue_scripts($hook) {
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );
 
-// Add buttons to the WooCommerce order sidebar
-function wc_print_buttons_add_to_sidebar() {
+// Add a meta box with the buttons to the WooCommerce order page sidebar
+function wc_print_buttons_add_meta_box() {
+    add_meta_box(
+        'wc-print-buttons-meta-box',            // Unique ID for the meta box
+        'Print Actions',                        // Meta box title
+        'wc_print_buttons_meta_box_content',    // Callback to render content
+        'shop_order',                           // Post type (WooCommerce orders)
+        'side',                                 // Context (display in sidebar)
+        'default'                               // Priority
+    );
+}
+add_action( 'add_meta_boxes', 'wc_print_buttons_add_meta_box' );
+
+// Render the content of the meta box
+function wc_print_buttons_meta_box_content() {
     echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
     echo '<button id="print-invoice" class="button woocommerce-button">Print Invoice</button>';
     echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
     echo '</div>';
 }
-add_action( 'woocommerce_admin_order_actions_end', 'wc_print_buttons_add_to_sidebar' );
