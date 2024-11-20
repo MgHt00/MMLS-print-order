@@ -15,6 +15,7 @@ if ( !defined( 'ABSPATH' ) ) {
 function wc_print_buttons_enqueue_scripts() {
     // Enqueue your JavaScript file (to be created later)
     wp_enqueue_script( 'wc-print-buttons-script', plugin_dir_url( __FILE__ ) . 'js/print-buttons.js', array( 'jquery' ), '1.0', true );
+    wp_enqueue_style( 'wc-print-buttons-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
 }
 
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );
