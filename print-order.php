@@ -11,24 +11,23 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Main plugin function
+// Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts($hook) {
-  global $post;
+    global $post;
 
-  // Load only on WooCommerce order edit page
-  if ( 'post.php' === $hook && 'shop_order' === get_post_type($post) ) {
-      wp_enqueue_script( 'wc-print-buttons-script', plugin_dir_url( __FILE__ ) . 'js/print-order.js', array( 'jquery' ), '1.0', true );
-      wp_enqueue_style( 'wc-print-buttons-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
-  }
+    // Load only on WooCommerce order edit page
+    if ( 'post.php' === $hook && 'shop_order' === get_post_type($post) ) {
+        wp_enqueue_script( 'wc-print-buttons-script', plugin_dir_url( __FILE__ ) . 'js/print-order.js', array( 'jquery' ), '1.0', true );
+        wp_enqueue_style( 'wc-print-buttons-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
+    }
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );
 
 // Add buttons to the WooCommerce order sidebar
 function wc_print_buttons_add_to_sidebar() {
-  echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
-  echo '<button id="print-invoice" class="button woocommerce-button">Print Invoice</button>';
-  echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
-  echo '</div>';
+    echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
+    echo '<button id="print-invoice" class="button woocommerce-button">Print Invoice</button>';
+    echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
+    echo '</div>';
 }
-
-add_action( 'woocommerce_admin_order_data_after_order_details', 'wc_print_buttons_add_to_sidebar' );
+add_action( 'woocommerce_admin_order_actions_end', 'wc_print_buttons_add_to_sidebar' );
