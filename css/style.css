@@ -1,8 +1,20 @@
 #wc-print-buttons-sidebar {
   margin-top: 20px;
+  font-size: 14px; /* Explicitly set font size to prevent affecting other areas */
 }
 
 #wc-print-buttons-sidebar .button {
+  margin: 5px 0;
+  display: block;
+  width: 100%;
+  font-size: 14px; /* Explicitly set button font size */
+}
+
+.mmls-print-buttons {
+  margin-top: 20px;
+}
+
+.mmls-print-buttons .button {
   margin: 5px 0;
   display: block;
   width: 100%;

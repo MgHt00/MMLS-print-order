@@ -23,19 +23,12 @@ function wc_print_buttons_enqueue_scripts($hook) {
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );
 
-// Add buttons to the WooCommerce order page
-function wc_print_buttons_add_to_order_page() {
-  global $post;
-
-  // Ensure we're on a WooCommerce order page
-  if ( get_post_type( $post ) !== 'shop_order' ) {
-      return;
-  }
-
-  echo '<div id="wc-print-buttons-sidebar">';
+// Add buttons to the WooCommerce order sidebar
+function wc_print_buttons_add_to_sidebar() {
+  echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
   echo '<button id="print-invoice" class="button woocommerce-button">Print Invoice</button>';
   echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
   echo '</div>';
 }
 
-add_action( 'add_meta_boxes', 'wc_print_buttons_add_to_order_page' );
+add_action( 'woocommerce_admin_order_data_after_order_details', 'wc_print_buttons_add_to_sidebar' );
