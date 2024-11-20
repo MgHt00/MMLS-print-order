@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce Print Buttons
+ * Plugin Name: MMLS Print Order
  * Description: Adds "Print Invoice" and "Print Shipping" buttons to the WooCommerce order page.
  * Version: 1.0
  * Author: Win Htoo Shwe
@@ -14,7 +14,7 @@ if ( !defined( 'ABSPATH' ) ) {
 // Main plugin function
 function wc_print_buttons_enqueue_scripts() {
     // Enqueue your JavaScript file (to be created later)
-    wp_enqueue_script( 'wc-print-buttons-script', plugin_dir_url( __FILE__ ) . 'js/print-buttons.js', array( 'jquery' ), '1.0', true );
+    wp_enqueue_script( 'wc-print-buttons-script', plugin_dir_url( __FILE__ ) . 'js/print-order.js', array( 'jquery' ), '1.0', true );
     wp_enqueue_style( 'wc-print-buttons-style', plugin_dir_url( __FILE__ ) . 'css/style.css' );
 }
 
