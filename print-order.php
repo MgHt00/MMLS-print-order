@@ -63,8 +63,19 @@ function wc_print_buttons_add_meta_box() {
 add_action( 'add_meta_boxes', 'wc_print_buttons_add_meta_box' );
 
 // Render the content of the meta box
+// Render the content of the meta box
 function wc_print_buttons_meta_box_content() {
     global $post;
+
+    // Check if we are on the "Add New Order" page
+    $current_url = $_SERVER['REQUEST_URI'];
+    $is_new_order_page = strpos($current_url, 'post-new.php?post_type=shop_order') !== false;
+
+    if ($is_new_order_page) {
+        // Do not display anything for the "Add New Order" page
+        echo '<p>This section is not available for new orders.</p>';
+        return;
+    }
 
     // Determine if we are on an existing order
     $order_id = isset($_GET['id']) ? intval($_GET['id']) : (isset($post->ID) ? $post->ID : 0);
@@ -88,10 +99,11 @@ function wc_print_buttons_meta_box_content() {
             echo '<p>Order data could not be fetched.</p>';
         }
     } else {
-        // Do not display anything for the "new order" page
+        // Do not display anything for invalid pages
         echo '<p>This section is not available for new orders.</p>';
     }
 }
+
 
 function wc_print_order_info($order) {
     return '<div id="order-info-sidebar" class="mmls-order-info">
