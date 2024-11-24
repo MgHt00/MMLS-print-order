@@ -61,7 +61,7 @@ add_action( 'add_meta_boxes', 'wc_print_buttons_add_meta_box' );
 function wc_print_buttons_meta_box_content() {
     global $post;
 
-    // Check if this is the "Add New Order" page
+    // Check if this is the "Add New Order" page [LE1]
     $current_url = $_SERVER['REQUEST_URI'];
     $is_new_order_page = strpos( $current_url, 'post-new.php?post_type=shop_order' ) !== false;
 
@@ -80,8 +80,8 @@ function wc_print_buttons_meta_box_content() {
         if ( $order ) {
             // Display buttons
             echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
-            echo '<button id="print-invoice" class="button woocommerce-button" data-order-id="' . esc_attr( $order_id ) . '">Print Invoice</button>';
-            echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
+            echo '<button id="print-invoice" type="button" class="button woocommerce-button" data-order-id="' . esc_attr( $order_id ) . '">Print Invoice</button>';
+            echo '<button id="print-shipping" type="button" class="button woocommerce-button" data-order-id="' . esc_attr( $order_id ) . '">Print Shipping</button>';
             echo '</div>';
             //echo wc_print_order_info($order);
         } else {
@@ -112,3 +112,55 @@ function handle_test_ajax_action() {
 }
 add_action( 'wp_ajax_test_ajax_action', 'handle_test_ajax_action' );
 add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // For non-logged-in users
+
+// Handle AJAX request to generate the invoice
+function handle_generate_invoice() {
+    if (isset($_POST['order_id'])) {
+        $order_id = intval($_POST['order_id']);
+        $order = wc_get_order($order_id);
+
+        if ($order) {
+            // Generate the invoice content (this is an example, you can format it as needed)
+            $invoice_content = '<h1>Invoice for Order #'. $order->get_id() . '</h1>';
+            $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
+
+            foreach ($order->get_items() as $item_id => $item) {
+                $invoice_content .= '<tr>';
+                $invoice_content .= '<td>' . $item->get_name() . '</td>';
+                $invoice_content .= '<td>' . $item->get_product()->get_sku() . '</td>';
+                $invoice_content .= '<td>' . wc_price($item->get_total()) . '</td>';
+                $invoice_content .= '<td>' . $item->get_quantity() . '</td>';
+                $invoice_content .= '<td>' . wc_price($item->get_total()) . '</td>';
+                $invoice_content .= '</tr>';
+            }
+
+            $invoice_content .= '</table>';
+            $invoice_content .= '<p><strong>Total: </strong>' . wc_price($order->get_total()) . '</p>';
+
+            wp_send_json_success($invoice_content); // Return invoice HTML
+        } else {
+            wp_send_json_error('Invalid order');
+        }
+    }
+}
+add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
+
+// Handle AJAX request to generate the shipping label
+function handle_generate_shipping() {
+    if (isset($_POST['order_id'])) {
+        $order_id = intval($_POST['order_id']);
+        $order = wc_get_order($order_id);
+
+        if ($order) {
+            // Generate the shipping label content (this is an example, adjust as needed)
+            $shipping_content = '<h1>Shipping Label for Order #'. $order->get_id() . '</h1>';
+            $shipping_content .= '<p><strong>Shipping Address:</strong> ' . $order->get_formatted_shipping_address() . '</p>';
+            $shipping_content .= '<p><strong>Shipping Method:</strong> ' . $order->get_shipping_method() . '</p>';
+
+            wp_send_json_success($shipping_content); // Return shipping content
+        } else {
+            wp_send_json_error('Invalid order');
+        }
+    }
+}
+add_action('wp_ajax_generate_shipping', 'handle_generate_shipping');

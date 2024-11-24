@@ -1,81 +1,63 @@
 jQuery(document).ready(function($) {
-  console.log('ajaxurl:', ajax_object.ajaxurl); // Log ajaxurl
+  console.log('ajaxurl:', ajax_object.ajaxurl); // Log ajaxurl for debugging
 
-  // Example: Make a basic AJAX request to check the URL
-  $.ajax({
-      url: ajax_object.ajaxurl,
-      type: 'POST',
-      data: {
-          action: 'test_ajax_action', // A test action
-      },
-      success: function(response) {
-          console.log('AJAX Request Success:', response);
-      },
-      error: function(error) {
-          console.log('AJAX Request Error:', error);
-      }
-  });
-});
+  // Handle the Print Invoice button click
+  $('#print-invoice').click(function(e) {
+      e.preventDefault(); // Prevent default button behavior
+      console.log('Print Invoice clicked');
+      var orderId = $(this).data('order-id'); // Get order ID from data attribute [LE2]
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  const printInvoiceButton = document.getElementById('print-invoice');
-
-  if (printInvoiceButton) {
-      printInvoiceButton.addEventListener('click', () => {
-          const orderId = printInvoiceButton.dataset.orderId;
-
-          if (!orderId) {
-              alert('Order ID is missing. Cannot generate invoice.');
-              return;
+      $.ajax({
+          url: ajax_object.ajaxurl,
+          type: 'POST',
+          data: {
+              action: 'generate_invoice', // Your custom AJAX action
+              order_id: orderId,
+          },
+          success: function(response) {
+              if (response.success) {
+                  // Open a new window and display the invoice content
+                  var printWindow = window.open('', '_blank');
+                  printWindow.document.write(response.data); // Write invoice HTML to the new window
+                  printWindow.document.close();
+                  printWindow.print(); // Trigger print dialog
+              } else {
+                  alert('Failed to generate invoice.');
+              }
+          },
+          error: function(error) {
+              console.log('AJAX Request Error:', error);
           }
-
-          fetch(ajax_object.ajaxurl, { // Use ajax_object.ajaxurl instead of hardcoding [LE2]
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: new URLSearchParams({
-                  action: 'generate_invoice',
-                  order_id: orderId,
-              }),
-          })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success && data.html) {
-                      const invoiceWindow = window.open('', '_blank', 'width=800,height=600');
-                      if (invoiceWindow) {
-                          invoiceWindow.document.write(data.html);
-                          invoiceWindow.document.close();
-                          invoiceWindow.print();
-                      } else {
-                          alert('Failed to open the print window. Please check your browser settings.');
-                      }
-                  } else {
-                      alert('Failed to fetch invoice data. Please try again.');
-                  }
-              })
-              .catch(error => {
-                  console.error('Error fetching invoice data:', error);
-                  alert('An error occurred while generating the invoice.');
-              });
       });
-  }
+  });
+
+  // Handle the Print Shipping button click
+  $('#print-shipping').click(function(e) {
+      e.preventDefault(); // Prevent default button behavior
+      console.log('Print Shipping clicked');
+      var orderId = $(this).data('order-id'); // Get order ID
+
+      $.ajax({
+          url: ajax_object.ajaxurl,
+          type: 'POST',
+          data: {
+              action: 'generate_shipping', // Your custom AJAX action
+              order_id: orderId,
+          },
+          success: function(response) {
+              if (response.success) {
+                  // Open a new window and display the shipping content
+                  var printWindow = window.open('', '_blank');
+                  printWindow.document.write(response.data); // Write shipping HTML to the new window
+                  printWindow.document.close();
+                  printWindow.print(); // Trigger print dialog
+              } else {
+                  alert('Failed to generate shipping label.');
+              }
+          },
+          error: function(error) {
+              console.log('AJAX Request Error:', error);
+          }
+      });
+  });
 });
-
-
-/*jQuery(document).ready(function ($) {
-  $('#print-invoice').on('click', function () {
-      let win = window.open('', '_blank');
-      win.document.write('<h1>Invoice</h1><p>This is a dummy invoice.</p>');
-      win.document.close();
-      win.print();
-  });
-
-  $('#print-shipping').on('click', function () {
-      let win = window.open('', '_blank');
-      win.document.write('<h1>Shipping Info</h1><p>This is dummy shipping info.</p>');
-      win.document.close();
-      win.print();
-  });
-});*/
