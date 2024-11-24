@@ -64,8 +64,36 @@ add_action( 'add_meta_boxes', 'wc_print_buttons_add_meta_box' );
 
 // Render the content of the meta box
 function wc_print_buttons_meta_box_content() {
+    global $post;
+
+    // Determine the order ID
+    if ( isset( $post->ID ) ) {
+        $order_id = $post->ID; // Live environment
+    } elseif ( isset( $_GET['id'] ) ) {
+        $order_id = intval( $_GET['id'] ); // Local environment
+    } else {
+        $order_id = null;
+    }
+
+    // Get the order object
+    $order = $order_id ? wc_get_order( $order_id ) : null;
+
     echo '<div id="wc-print-buttons-sidebar" class="mmls-print-buttons">';
     echo '<button id="print-invoice" class="button woocommerce-button">Print Invoice</button>';
     echo '<button id="print-shipping" class="button woocommerce-button">Print Shipping</button>';
+
+    // Check if the order is valid
+    if ( $order ) {
+        echo '<h3>Order Information</h3>';
+        echo '<p><strong>Order ID:</strong> ' . $order->get_id() . '</p>';
+        echo '<p><strong>Status:</strong> ' . wc_get_order_status_name( $order->get_status() ) . '</p>';
+        echo '<p><strong>Total:</strong> ' . $order->get_total() . ' ' . $order->get_currency() . '</p>';
+        echo '<p><strong>Customer Name:</strong> ' . $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() . '</p>';
+        echo '<p><strong>Billing Email:</strong> ' . $order->get_billing_email() . '</p>';
+        echo '<p><strong>Billing Address:</strong> ' . $order->get_formatted_billing_address() . '</p>';
+    } else {
+        echo '<p>Order data could not be fetched.</p>';
+    }
+
     echo '</div>';
 }
