@@ -11,6 +11,14 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
+function ensure_jquery_admin() {
+    if (is_admin()) {
+        // Explicitly load jQuery in the admin area
+        wp_enqueue_script('jquery');
+    }
+}
+add_action('admin_enqueue_scripts', 'ensure_jquery_admin');
+
 // Handle test AJAX action
 function handle_test_ajax_action() {
     // Return a response to check if the request is successful
@@ -20,39 +28,49 @@ add_action( 'wp_ajax_test_ajax_action', 'handle_test_ajax_action' );
 add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // For non-logged-in users
 
 // to make sure jQuery is loaded.
-function my_plugin_enqueue_scripts() {
+/*function my_plugin_enqueue_scripts() {
     // Enqueue jQuery (it is already bundled with WordPress, so we just need to enqueue it)
     wp_enqueue_script('jquery');
     
     // Optionally enqueue your custom script that handles the button click
     wp_enqueue_script('print-order-js', plugin_dir_url(__FILE__) . 'js/print-order.js', array('jquery'), null, true);
 }
-add_action('wp_enqueue_scripts', 'my_plugin_enqueue_scripts');
+add_action('wp_enqueue_scripts', 'my_plugin_enqueue_scripts');*/
 
 
 // Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts( $hook ) {
     $current_screen = get_current_screen();
 
+    // Ensure jQuery is loaded
+    if ( !wp_script_is( 'jquery', 'enqueued' ) ) {
+        wp_enqueue_script('jquery');
+    }
+
     // Check if we are on the WooCommerce orders page or a specific order page
     if ( $current_screen->id === 'woocommerce_page_wc-orders' || $current_screen->post_type === 'shop_order' ) {
-        // Enqueue JavaScript and CSS files
+        // Enqueue jQuery
+        wp_enqueue_script('jquery');
+
+        // Enqueue custom JS file
         wp_enqueue_script(
             'wc-print-buttons-script',
-            plugin_dir_url( __FILE__ ) . 'js/print-order.js',
-            array( 'jquery' ),
+            plugin_dir_url(__FILE__) . 'js/print-order.js',
+            array('jquery'),  // Ensure jQuery is loaded first
             '1.1',
             true
         );
+
+        // Enqueue CSS (optional)
         wp_enqueue_style(
             'wc-print-buttons-style',
-            plugin_dir_url( __FILE__ ) . 'css/print-order-style.css'
+            plugin_dir_url(__FILE__) . 'css/print-order-style.css'
         );
 
         // Pass ajaxurl to JavaScript
-        wp_localize_script( 'wc-print-buttons-script', 'ajax_object', array(
-            'ajaxurl' => admin_url( 'admin-ajax.php' ),
-        ) );
+        wp_localize_script('wc-print-buttons-script', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+        ));
     }
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );

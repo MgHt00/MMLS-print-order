@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
-  console.log('ajaxurl:', ajax_object.ajaxurl); // Log ajaxurl for debugging
+    console.log("jQuery:", $); // This should work
+    console.log('ajaxurl:', ajax_object.ajaxurl); // Log ajaxurl for debugging
 
   // Handle the Print Invoice button click
   $('#print-invoice').click(function(e) {
@@ -19,7 +20,7 @@ jQuery(document).ready(function($) {
               if (response.success && response.data.invoice) {
                   // Successfully fetched the invoice content
                   var invoiceContent = response.data.invoice;
-                  // Now handle the content, for example, display it in a new window
+                  // Now handle the content
                   var printWindow = window.open('', '_blank');
                   printWindow.document.write(invoiceContent);
                   printWindow.document.close();
