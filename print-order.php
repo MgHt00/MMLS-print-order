@@ -11,6 +11,25 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Handle test AJAX action
+function handle_test_ajax_action() {
+    // Return a response to check if the request is successful
+    wp_send_json_success('Test AJAX action successful!');
+}
+add_action( 'wp_ajax_test_ajax_action', 'handle_test_ajax_action' );
+add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // For non-logged-in users
+
+// to make sure jQuery is loaded.
+function my_plugin_enqueue_scripts() {
+    // Enqueue jQuery (it is already bundled with WordPress, so we just need to enqueue it)
+    wp_enqueue_script('jquery');
+    
+    // Optionally enqueue your custom script that handles the button click
+    wp_enqueue_script('print-order-js', plugin_dir_url(__FILE__) . 'js/print-order.js', array('jquery'), null, true);
+}
+add_action('wp_enqueue_scripts', 'my_plugin_enqueue_scripts');
+
+
 // Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts( $hook ) {
     $current_screen = get_current_screen();
@@ -104,14 +123,6 @@ function wc_print_order_info( $order ) {
         <p><strong>Billing Address:</strong> ' . esc_html( $order->get_formatted_billing_address() ) . '</p>
     </div>';
 }
-
-// Handle test AJAX action
-function handle_test_ajax_action() {
-    // Return a response to check if the request is successful
-    wp_send_json_success('Test AJAX action successful!');
-}
-add_action( 'wp_ajax_test_ajax_action', 'handle_test_ajax_action' );
-add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // For non-logged-in users
 
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {

@@ -9,25 +9,27 @@ jQuery(document).ready(function($) {
 
       $.ajax({
           url: ajax_object.ajaxurl,
-          type: 'POST',
+          method: 'POST',
           data: {
-              action: 'generate_invoice', // Your custom AJAX action
-              order_id: orderId,
+              action: 'generate_invoice',
+              order_id: orderId
           },
-          success: function(response) {
-              if (response.success) {
-                  // Open a new window and display the invoice content
+          success: function (response) {
+            console.log(response); // Check the full response in the console
+              if (response.success && response.data.invoice) {
+                  // Successfully fetched the invoice content
+                  var invoiceContent = response.data.invoice;
+                  // Now handle the content, for example, display it in a new window
                   var printWindow = window.open('', '_blank');
-                  //printWindow.document.write(response.data); // Write invoice HTML to the new window
-                  newWindow.document.write(response.data.invoice);
+                  printWindow.document.write(invoiceContent);
                   printWindow.document.close();
                   printWindow.print(); // Trigger print dialog
               } else {
-                  alert('Failed to generate invoice.');
+                alert('Failed to fetch invoice data. Please try again.');
               }
           },
-          error: function(error) {
-              console.log('AJAX Request Error:', error);
+          error: function () {
+            alert('An error occurred. Please try again.');
           }
       });
   });
