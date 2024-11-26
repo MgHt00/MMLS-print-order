@@ -120,29 +120,35 @@ function handle_generate_invoice() {
         $order = wc_get_order($order_id);
 
         if ($order) {
-            // Generate the invoice content (this is an example, you can format it as needed)
-            $invoice_content = '<h1>Invoice for Order #'. $order->get_id() . '</h1>';
+            // Generate the invoice content
+            $invoice_content = '<h1>Invoice for Order #' . esc_html($order->get_id()) . '</h1>';
             $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
 
             foreach ($order->get_items() as $item_id => $item) {
+                $product = $item->get_product(); // Fetch product object
                 $invoice_content .= '<tr>';
-                $invoice_content .= '<td>' . $item->get_name() . '</td>';
-                $invoice_content .= '<td>' . $item->get_product()->get_sku() . '</td>';
-                $invoice_content .= '<td>' . wc_price($item->get_total()) . '</td>';
-                $invoice_content .= '<td>' . $item->get_quantity() . '</td>';
-                $invoice_content .= '<td>' . wc_price($item->get_total()) . '</td>';
+                $invoice_content .= '<td>' . esc_html($item->get_name()) . '</td>';
+                $invoice_content .= '<td>' . esc_html($product ? $product->get_sku() : 'N/A') . '</td>';
+                $invoice_content .= '<td>' . wp_kses_post(wc_price($item->get_total())) . '</td>';
+                $invoice_content .= '<td>' . esc_html($item->get_quantity()) . '</td>';
+                $invoice_content .= '<td>' . wp_kses_post(wc_price($item->get_total())) . '</td>';
                 $invoice_content .= '</tr>';
             }
 
             $invoice_content .= '</table>';
-            $invoice_content .= '<p><strong>Total: </strong>' . wc_price($order->get_total()) . '</p>';
+            $invoice_content .= '<p><strong>Total: </strong>' . wp_kses_post(wc_price($order->get_total())) . '</p>';
 
+            // Sanitize the final content and return it
+            $invoice_content = wp_kses_post($invoice_content); // Sanitize HTML content
             wp_send_json_success($invoice_content); // Return invoice HTML
         } else {
             wp_send_json_error('Invalid order');
         }
+    } else {
+        wp_send_json_error('Order ID not provided');
     }
 }
+
 add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
 
 // Handle AJAX request to generate the shipping label

@@ -46,13 +46,16 @@ jQuery(document).ready(function($) {
           },
           success: function(response) {
               if (response.success) {
-                  // Open a new window and display the shipping content
-                  var printWindow = window.open('', '_blank');
-                  printWindow.document.write(response.data); // Write shipping HTML to the new window
-                  printWindow.document.close();
-                  printWindow.print(); // Trigger print dialog
+                // Open a new window and display the invoice content                    
+                var printWindow = window.open('', '_blank');
+                printWindow.document.write('<html><head><title>Invoice</title></head><body>'); // Open a full HTML document
+                printWindow.document.write(response.data); // Write invoice HTML to the new window
+                printWindow.document.write('</body></html>'); // Close the HTML document
+                printWindow.document.close();
+                printWindow.print(); // Trigger print dialog
               } else {
-                  alert('Failed to generate shipping label.');
+                console.log('Invoice generation failed: ', response); // Log error response
+                alert('Failed to generate shipping label.');
               }
           },
           error: function(error) {
