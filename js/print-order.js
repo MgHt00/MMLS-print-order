@@ -18,7 +18,8 @@ jQuery(document).ready(function($) {
               if (response.success) {
                   // Open a new window and display the invoice content
                   var printWindow = window.open('', '_blank');
-                  printWindow.document.write(response.data); // Write invoice HTML to the new window
+                  //printWindow.document.write(response.data); // Write invoice HTML to the new window
+                  newWindow.document.write(response.data.invoice);
                   printWindow.document.close();
                   printWindow.print(); // Trigger print dialog
               } else {

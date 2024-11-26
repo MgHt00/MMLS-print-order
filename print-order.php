@@ -115,37 +115,58 @@ add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // F
 
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {
+    // Check for required data (order ID)
     if (isset($_POST['order_id'])) {
         $order_id = intval($_POST['order_id']);
+        error_log('generate_invoice called');
+        error_log('Order ID: ' . $order_id);
+
+        // Get the WooCommerce order object
         $order = wc_get_order($order_id);
 
-        if ($order) {
-            // Generate the invoice content
-            $invoice_content = '<h1>Invoice for Order #' . esc_html($order->get_id()) . '</h1>';
-            $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
-
-            foreach ($order->get_items() as $item_id => $item) {
-                $product = $item->get_product(); // Fetch product object
-                $invoice_content .= '<tr>';
-                $invoice_content .= '<td>' . esc_html($item->get_name()) . '</td>';
-                $invoice_content .= '<td>' . esc_html($product ? $product->get_sku() : 'N/A') . '</td>';
-                $invoice_content .= '<td>' . wp_kses_post(wc_price($item->get_total())) . '</td>';
-                $invoice_content .= '<td>' . esc_html($item->get_quantity()) . '</td>';
-                $invoice_content .= '<td>' . wp_kses_post(wc_price($item->get_total())) . '</td>';
-                $invoice_content .= '</tr>';
-            }
-
-            $invoice_content .= '</table>';
-            $invoice_content .= '<p><strong>Total: </strong>' . wp_kses_post(wc_price($order->get_total())) . '</p>';
-
-            // Sanitize the final content and return it
-            $invoice_content = wp_kses_post($invoice_content); // Sanitize HTML content
-            wp_send_json_success($invoice_content); // Return invoice HTML
-        } else {
-            wp_send_json_error('Invalid order');
+        if (!$order) {
+            wp_send_json_error(array('message' => 'Order not found.'));
+            return;
         }
+
+        // Start generating the invoice content
+        $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';
+        $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
+
+        // Loop through the order items and display their details
+        foreach ($order->get_items() as $item_id => $item) {
+            $product = $item->get_product();
+            $item_name = $item->get_name();
+            $item_sku = $product ? $product->get_sku() : 'N/A';
+            $item_price = wc_price($item->get_total() / $item->get_quantity()); // Price per item
+            $item_quantity = $item->get_quantity();
+            $item_total = wc_price($item->get_total());
+
+            // Add row for each item
+            $invoice_content .= '<tr>';
+            $invoice_content .= '<td>' . $item_name . '</td>';
+            $invoice_content .= '<td>' . $item_sku . '</td>';
+            $invoice_content .= '<td>' . $item_price . '</td>';
+            $invoice_content .= '<td>' . $item_quantity . '</td>';
+            $invoice_content .= '<td>' . $item_total . '</td>';
+            $invoice_content .= '</tr>';
+        }
+
+        // Add the order total to the invoice
+        $invoice_content .= '</table>';
+        $invoice_content .= '<p><strong>Total: </strong>' . wc_price($order->get_total()) . '</p>';
+
+        // Prepare the response
+        $response = array(
+            'success' => true,
+            'invoice' => $invoice_content,
+        );
+
+        // Send the response as JSON
+        wp_send_json_success($response);
     } else {
-        wp_send_json_error('Order ID not provided');
+        // If no order ID is found
+        wp_send_json_error(array('message' => 'Order ID not found.'));
     }
 }
 
