@@ -19,3 +19,99 @@
   display: block;
   width: 100%;
 }
+
+/* Styles for print invoice and shipping label */
+/*@media print {
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .total {
+    font-weight: bold;
+    text-align: right;
+    padding-top: 10px;
+  }
+
+  .label-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+}*/
+
+#invoice-container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+#invoice-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#invoice-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#invoice-container table, 
+#invoice-container th, 
+#invoice-container td {
+  border: 1px solid #ddd;
+}
+
+#invoice-container th, 
+#invoice-container td {
+  text-align: left;
+  padding: 8px;
+}
+
+#invoice-container th {
+  background-color: #f4f4f4;
+}
+
+#invoice-container tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#invoice-container .total {
+  font-weight: bold;
+  text-align: right;
+  padding-top: 10px;
+}
+
+#invoice-container .label-box {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 20px;
+}
