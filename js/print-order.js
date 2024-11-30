@@ -38,10 +38,12 @@ $('#print-invoice').click(function(e) {
                                     <img src="${logoUrl}" alt="Company Logo" />
                                 </div>
                                 <div class="address-section">
-                                    <table>
-                                        <tr><td><strong>From:</strong></td></tr>
-                                        <tr><td>Myanmar Lifestyle Fullfilment Center, 35(first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar</td></tr>
-                                    </table>
+                                    <div class="address-header">
+                                        <strong>From:</strong>
+                                    </div>
+                                    <div class="address-details">
+                                        Myanmar Lifestyle Fulfillment Center, 35 (first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar
+                                    </div>
                                 </div>
                             </div>
                         </div>
