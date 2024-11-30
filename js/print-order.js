@@ -16,7 +16,7 @@ $('#print-invoice').click(function(e) {
             order_id: orderId
         },
         success: function (response) {
-          console.log(response); // Check the full response in the console
+          console.log("inside sucess:function", response); // Check the full response in the console
           if (response.success && response.data.invoice) {
             // Successfully fetched the invoice content
             var cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
