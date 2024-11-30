@@ -156,6 +156,8 @@ function handle_generate_invoice() {
             return;
         }
 
+        $subtotal = 0;
+
         // Start generating the invoice content
         $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';
         $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
@@ -163,10 +165,10 @@ function handle_generate_invoice() {
         // Loop through the order items and display their details
         foreach ($order->get_items() as $item_id => $item) {
             $product = $item->get_product();
-            $item_name = $item->get_name();
-            $item_sku = $product ? $product->get_sku() : 'N/A';
+            $item_name = esc_html($item->get_name());
+            $item_sku = $product ? esc_html($product->get_sku()) : 'N/A';
             $item_price = wc_price($item->get_total() / $item->get_quantity()); // Price per item
-            $item_quantity = $item->get_quantity();
+            $item_quantity = esc_html($item->get_quantity());
             $item_total = wc_price($item->get_total());
 
             // Add row for each item
@@ -177,11 +179,34 @@ function handle_generate_invoice() {
             $invoice_content .= '<td>' . $item_quantity . '</td>';
             $invoice_content .= '<td>' . $item_total . '</td>';
             $invoice_content .= '</tr>';
+            
+            // Accumulate the subtotal
+            $subtotal += $item->get_total(); // Add the item's total (excluding tax)
         }
 
-        // Add the order total to the invoice
+        // Add the subtotal row
+        $invoice_content .= '<tr>';
+        $invoice_content .= '<td colspan="4">Sub Total</td>';
+        $invoice_content .= '<td>' . wc_price($subtotal) . '</td>';
+        $invoice_content .= '</tr>';
+
+        // Get the shipping total
+        $shipping_total = $order->get_shipping_total();
+
+        // Add the shipping row
+        $invoice_content .= '<tr>';
+        $invoice_content .= '<td colspan="4">Shipping</td>';
+        $invoice_content .= '<td>' . wc_price($shipping_total) . '</td>';
+        $invoice_content .= '</tr>';
+        
+        // Add the total row
+        $invoice_content .= '<tr>';
+        $invoice_content .= '<td colspan="4"><strong>Total</strong></td>';
+        $invoice_content .= '<td><strong>' . wc_price($order->get_total()) . '</strong></td>';
+        $invoice_content .= '</tr>';
+
+        // Close the table
         $invoice_content .= '</table>';
-        $invoice_content .= '<p><strong>Total: </strong>' . wc_price($order->get_total()) . '</p>';
 
         // Prepare the response
         $response = array(
