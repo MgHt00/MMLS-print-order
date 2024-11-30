@@ -22,6 +22,8 @@ $('#print-invoice').click(function(e) {
             var cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
             console.log("CSS File URL:", cssUrl);
 
+            var logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
+
             var invoiceContent = `
             <html>
                 <head>
@@ -30,6 +32,9 @@ $('#print-invoice').click(function(e) {
                 </head>
                 <body>
                     <div id="invoice-container">
+                        <div id="invoice-header" style="text-align: center; margin-bottom: 20px;">
+                            <img src="${logoUrl}" alt="Company Logo" style="max-width: 200px; height: auto;">
+                        </div>
                         ${response.data.invoice}
                     </div>
                 </body>
