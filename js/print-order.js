@@ -32,9 +32,20 @@ $('#print-invoice').click(function(e) {
                 </head>
                 <body>
                     <div id="invoice-container">
-                        <div id="invoice-header" style="text-align: center; margin-bottom: 20px;">
-                            <img src="${logoUrl}" alt="Company Logo" style="max-width: 200px; height: auto;">
+                        <div id="invoice-header">
+                            <div class="header-content">
+                                <div class="logo-section">
+                                    <img src="${logoUrl}" alt="Company Logo" />
+                                </div>
+                                <div class="address-section">
+                                    <table>
+                                        <tr><td><strong>From:</strong></td></tr>
+                                        <tr><td>Myanmar Lifestyle Fullfilment Center, 35(first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar</td></tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+
                         ${response.data.invoice}
                     </div>
                 </body>
