@@ -57,18 +57,12 @@ function wc_print_buttons_enqueue_scripts( $hook ) {
             plugin_dir_url(__FILE__) . 'css/print-order-style.css'
         );
 
-        /*wp_enqueue_style(
-            'print-order-style',
-            plugin_dir_url(__FILE__) . 'css/print-order-style.css',
-            [],
-            '1.0'
-        );*/
-
-        // Pass ajaxurl to JavaScript
+        // Pass ajaxurl and additional data to JavaScript
         wp_localize_script('wc-print-buttons-script', 'ajax_object', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'plugin_url' => untrailingslashit(plugin_dir_url(__FILE__)), // Ensure no trailing slash
-        ));        
+            'comp_address' => 'Myanmar Lifestyle Fulfillment Center, 35 (first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar'
+        ));
     }
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );

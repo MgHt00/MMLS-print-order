@@ -23,7 +23,7 @@ jQuery(document).ready(function($) {
                     console.log("CSS File URL:", cssUrl);
 
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
-
+                    let compAddress = ajax_object.comp_address;
                     let invoiceContent = `
                     <html>
                         <head>
@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
                                                 <strong>From:</strong>
                                             </div>
                                             <div class="address-details">
-                                                Myanmar Lifestyle Fulfillment Center, 35 (first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar
+                                                ${compAddress}
                                             </div>
                                         </div>
                                     </div>
