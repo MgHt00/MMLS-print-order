@@ -153,7 +153,7 @@ function handle_generate_invoice() {
         $subtotal = 0;
 
         // Start generating the invoice content
-        $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';
+       /* $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';*/
         $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
 
         // Loop through the order items and display their details
@@ -180,7 +180,7 @@ function handle_generate_invoice() {
 
         // Add the subtotal row
         $invoice_content .= '<tr>';
-        $invoice_content .= '<td colspan="4">Sub Total</td>';
+        $invoice_content .= '<td colspan="4" class="stick-to-right">Sub Total</td>';
         $invoice_content .= '<td>' . wc_price($subtotal) . '</td>';
         $invoice_content .= '</tr>';
 
@@ -189,13 +189,13 @@ function handle_generate_invoice() {
 
         // Add the shipping row
         $invoice_content .= '<tr>';
-        $invoice_content .= '<td colspan="4">Shipping</td>';
+        $invoice_content .= '<td colspan="4" class="stick-to-right">Shipping</td>';
         $invoice_content .= '<td>' . wc_price($shipping_total) . '</td>';
         $invoice_content .= '</tr>';
         
         // Add the total row
         $invoice_content .= '<tr>';
-        $invoice_content .= '<td colspan="4"><strong>Total</strong></td>';
+        $invoice_content .= '<td colspan="4" class="stick-to-right"><strong>Total</strong></td>';
         $invoice_content .= '<td><strong>' . wc_price($order->get_total()) . '</strong></td>';
         $invoice_content .= '</tr>';
 

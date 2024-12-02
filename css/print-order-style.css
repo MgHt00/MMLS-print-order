@@ -86,6 +86,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  
 }
 
 #invoice-container table, 
@@ -94,9 +95,14 @@
   border: 1px solid #ddd;
 }
 
+#invoice-container td.stick-to-right {
+  text-align: right;
+}
+
 #invoice-container th, 
 #invoice-container td {
-  text-align: left;
+  text-align: center;
+  font-size: 12px;
   padding: 8px;
 }
 
