@@ -36,6 +36,11 @@ jQuery(document).ready(function($) {
                                     <div class="header-content">
                                         <div class="logo-section">
                                             <img src="${logoUrl}" alt="Myanmar Lifestyle" />
+                                            <div class="order-info">
+                                                Order No: ${response.data.order_id}
+                                                Date: ${response.data.order_date}
+                                                Phone Number: ${response.data.phone_number}
+                                            </div>
                                         </div>
                                         <div class="address-section">
                                             <div class="address-header">

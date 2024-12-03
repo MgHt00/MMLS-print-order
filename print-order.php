@@ -152,8 +152,29 @@ function handle_generate_invoice() {
 
         $subtotal = 0;
 
+        // Fetch shipping address
+        $shipping_address = $order->get_formatted_shipping_address();
+        if (!$shipping_address) {
+            $shipping_address = 'No shipping address provided';
+        }
+
+        // Fetch billing phone number
+        $phone_number = $order->get_billing_phone();
+        if (!$phone_number) {
+            $phone_number = 'No phone number provided';
+        }
+
+        // Fetch order date
+        $order_date = $order->get_date_created();
+        if ($order_date) {
+            $order_date = $order_date->date('F j, Y, g:i a'); // Format the date
+        } else {
+            $order_date = 'Order date not available';
+        }
+
+
         // Start generating the invoice content
-       /* $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';*/
+        /* $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';*/
         $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
 
         // Loop through the order items and display their details
@@ -206,6 +227,10 @@ function handle_generate_invoice() {
         $response = array(
             'success' => true,
             'invoice' => $invoice_content,
+            'order_id' => $order_id,
+            'shipping_address' => $shipping_address,
+            'phone_number' => $phone_number,
+            'order_date' => $order_date,
         );
 
         // Send the response as JSON
