@@ -36,14 +36,31 @@
   /*margin: 0 auto;*/
 }
 
+.header-content span {
+  font-weight: bold;
+}
+
 .logo-section {
   flex: 2;
   text-align: left;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo-section img {
   max-width: 200px;
   height: auto;
+}
+
+.logo-section .order-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-section .order-info > p {
+  font-size: 12px;
+  padding: 0px;
+  margin: 2px;
 }
 
 .address-section {
@@ -67,7 +84,7 @@
 }
 
 .address-details {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
 }
 

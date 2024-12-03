@@ -37,14 +37,14 @@ jQuery(document).ready(function($) {
                                         <div class="logo-section">
                                             <img src="${logoUrl}" alt="Myanmar Lifestyle" />
                                             <div class="order-info">
-                                                Order No: ${response.data.order_id}
-                                                Date: ${response.data.order_date}
-                                                Phone Number: ${response.data.phone_number}
+                                                <p><span>Order No:</span> ${response.data.order_id}</p>
+                                                <p><span>Date:</span> ${response.data.order_date}</p>
+                                                <p><span>Phone Number:</span> ${response.data.phone_number}</p>
                                             </div>
                                         </div>
                                         <div class="address-section">
                                             <div class="address-header">
-                                                <strong>From:</strong>
+                                                <span>From:</span>
                                             </div>
                                             <div class="address-details">
                                                 ${compAddress}
