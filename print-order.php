@@ -155,21 +155,25 @@ function handle_generate_invoice() {
         // Fetch shipping address
         $shipping_address = $order->get_formatted_shipping_address();
         if (!$shipping_address) {
-            $shipping_address = 'No shipping address provided';
+            /*$shipping_address = 'No shipping address provided';*/
+            $shipping_address = '';
         }
 
         // Fetch billing phone number
         $phone_number = $order->get_billing_phone();
         if (!$phone_number) {
-            $phone_number = 'No phone number provided';
+            $phone_number = '';
         }
 
         // Fetch order date
         $order_date = $order->get_date_created();
         if ($order_date) {
-            $order_date = $order_date->date('F j, Y, g:i a'); // Format the date
+            $order_date = $order_date->date('F j, Y'); // Format the date
+            //F: Full month name (e.g., December).
+            //j: Day of the month without leading zeros.
+            //Y: Full four-digit year.
         } else {
-            $order_date = 'Order date not available';
+            $order_date = '';
         }
 
 
