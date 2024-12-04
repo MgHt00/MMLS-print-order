@@ -31,6 +31,7 @@ add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // F
 // Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts( $hook ) {
     $current_screen = get_current_screen();
+    $company_details = include plugin_dir_path(__FILE__) . 'company-details.php';
 
     // Ensure jQuery is loaded
     if ( !wp_script_is( 'jquery', 'enqueued' ) ) {
@@ -61,7 +62,7 @@ function wc_print_buttons_enqueue_scripts( $hook ) {
         wp_localize_script('wc-print-buttons-script', 'ajax_object', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'plugin_url' => untrailingslashit(plugin_dir_url(__FILE__)), // Ensure no trailing slash
-            'comp_address' => 'Myanmar Lifestyle Fulfillment Center, 35 (first Floor), West Arzarni Street, Yangon, Bahan, 11201, Myanmar'
+            'comp_address' => $company_details['comp_address'], // Use the value from the included file
         ));
     }
 }

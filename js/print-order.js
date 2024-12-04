@@ -49,6 +49,12 @@ jQuery(document).ready(function($) {
                                             <div class="address-details">
                                                 ${compAddress}
                                             </div>
+                                            <div class="shipping-address-header">
+                                                <span>Shipping Address:
+                                            </div>
+                                            <div class="address-details">
+                                                ${response.data.shipping_address}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
