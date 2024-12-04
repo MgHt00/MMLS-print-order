@@ -24,6 +24,9 @@ jQuery(document).ready(function($) {
 
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
                     let compAddress = ajax_object.comp_address;
+                    let thankyouMessage = ajax_object.thankyou_message;
+                    let compPhoneNumber = ajax_object.comp_phone_number;
+                    let compEmailAddress = ajax_object.comp_email_address;
                     let invoiceContent = `
                     <html>
                         <head>
@@ -49,6 +52,7 @@ jQuery(document).ready(function($) {
                                             <div class="address-details">
                                                 ${compAddress}
                                             </div>
+                                            <div class="address-spacer"></div>
                                             <div class="shipping-address-header">
                                                 <span>Shipping Address:
                                             </div>
@@ -60,6 +64,16 @@ jQuery(document).ready(function($) {
                                 </div>
 
                                 ${response.data.invoice}
+
+                                <div id="footer-container">
+                                    <div id="footer-message">${thankyouMessage}</div>
+                                    <div id="footer-contact-info">
+                                        <div>Customer Support:&nbsp;</div>
+                                        <div>${compPhoneNumber}</div>
+                                        <div>&nbsp;|&nbsp;</div>
+                                        <div>${compEmailAddress}</div>
+                                    </div>
+                                </div>
                             </div>
                         </body>
                     </html>`;

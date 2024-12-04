@@ -63,6 +63,9 @@ function wc_print_buttons_enqueue_scripts( $hook ) {
             'ajaxurl' => admin_url('admin-ajax.php'),
             'plugin_url' => untrailingslashit(plugin_dir_url(__FILE__)), // Ensure no trailing slash
             'comp_address' => $company_details['comp_address'], // Use the value from the included file
+            'thankyou_message' => $company_details['thankyou_message'],
+            'comp_phone_number' => $company_details['comp_phone_number'],
+            'comp_email_address' => $company_details['comp_email_address'],
         ));
     }
 }
