@@ -40,7 +40,8 @@ function wc_print_buttons_enqueue_scripts( $hook ) {
         wp_localize_script('wc-print-buttons-script', 'ajax_object', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
             'plugin_url' => untrailingslashit(plugin_dir_url(__FILE__)), // Ensure no trailing slash
-            'comp_address' => $company_details['comp_address'], // Use the value from the included file
+            'comp_name' => $company_details['comp_name'],
+            'comp_address' => $company_details['comp_address'], 
             'thankyou_message' => $company_details['thankyou_message'],
             'comp_phone_number' => $company_details['comp_phone_number'],
             'comp_email_address' => $company_details['comp_email_address'],
@@ -116,6 +117,7 @@ function wc_print_order_info( $order ) {
     </div>';
 }
 
+// Helper function to returns the required data (shipping address, phone number, etc.)
 function get_order_details($order) {
     if (!$order instanceof WC_Order) {
         return false; // Ensure the input is a valid order object
@@ -141,10 +143,16 @@ function get_order_details($order) {
         $order_date = '';
     }
 
+    // Fetch payment method
+    $payment_method = $order->get_payment_method(); // Internal payment method key (e.g., 'cod', 'paypal')
+    $payment_method_title = $order->get_payment_method_title(); // Human-readable title (e.g., 'Cash on Delivery', 'PayPal')
+
     return array(
         'shipping_address' => $shipping_address,
         'phone_number'     => $phone_number,
         'order_date'       => $order_date,
+        'payment_method'      => $payment_method,
+        'payment_method_title' => $payment_method_title,
     );
 }
 
@@ -250,31 +258,44 @@ function handle_generate_shipping() {
         $order_id = intval($_POST['order_id']);
         $order = wc_get_order($order_id);
 
-        if ($order) {
-            // Generate the shipping label content (this is an example, adjust as needed)
-            $shipping_content = '<h1>Shipping Label for Order #'. $order->get_id() . '</h1>';
-            $shipping_content .= '<p><strong>Shipping Address:</strong> ' . $order->get_formatted_shipping_address() . '</p>';
-            $shipping_content .= '<p><strong>Shipping Method:</strong> ' . $order->get_shipping_method() . '</p>';
+        error_log('generate_shipping called');
+        error_log('Order ID: ' . $order_id);
 
-            /*
-            wp_send_json_success($shipping_content); // Return shipping content
-            */   
+        // Get the WooCommerce order object
+        $order = wc_get_order($order_id);
 
-            // Prepare the response
-            $response = array(
-                'success' => true,
-                'shipping' => $shipping_content,
-                'order_id' => $order_id,
-                'shipping_address' => $shipping_address,
-                'phone_number' => $phone_number,
-                'order_date' => $order_date,
-            );
-
-            // Send the response as JSON
-            wp_send_json_success($response);
-        } else {
-            wp_send_json_error('Invalid order');
+        if (!$order) {
+            wp_send_json_error(array('message' => 'Order not found.'));
+            return;
         }
+
+        // Reuse the helper function to get order details
+        $order_details = get_order_details($order);
+
+        $shipping_address = $order_details['shipping_address'];
+        $phone_number = $order_details['phone_number'];
+        $order_date = $order_details['order_date'];
+        $payment_method = $order_details['payment_method_title'];
+
+        // Get the total amount
+        $total_amount = $order->get_total();
+
+        // Prepare the response
+        $response = array(
+            'success' => true,
+            'order_id' => $order_id,
+            'shipping_address' => $shipping_address,
+            'phone_number' => $phone_number,
+            /*'order_date' => $order_date,*/
+            'payment_method' => $payment_method,
+            'total_amount' => $total_amount,
+        );
+
+        // Send the response as JSON
+        wp_send_json_success($response);
+    } else {
+        // If no order ID is found
+        wp_send_json_error(array('message' => 'Order ID not found.'));
     }
 }
 add_action('wp_ajax_generate_shipping', 'handle_generate_shipping');

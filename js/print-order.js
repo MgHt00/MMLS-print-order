@@ -16,11 +16,10 @@ jQuery(document).ready(function($) {
                 order_id: orderId
             },
             success: function (response) {
-                console.log("inside success:function", response); // Check the full response in the console
+                console.log("print-invoice success:", response); // Check the full response in the console
                 if (response.success && response.data.invoice) {
-                    // Successfully fetched the invoice content
                     let cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
-                    console.log("CSS File URL:", cssUrl);
+                    /*console.log("CSS File URL:", cssUrl);*/
 
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
                     let compAddress = ajax_object.comp_address;
@@ -40,9 +39,9 @@ jQuery(document).ready(function($) {
                                         <div class="logo-section">
                                             <img src="${logoUrl}" alt="Myanmar Lifestyle" />
                                             <div class="order-info">
-                                                <p><span>Order No:</span> ${response.data.order_id}</p>
-                                                <p><span>Date:</span> ${response.data.order_date}</p>
-                                                <p><span>Phone Number:</span> ${response.data.phone_number}</p>
+                                                <p><span>Order No:&nbsp;</span> ${response.data.order_id}</p>
+                                                <p><span>Date:&nbsp;</span> ${response.data.order_date}</p>
+                                                <p><span>Phone Number:&nbsp;</span> ${response.data.phone_number}</p>
                                             </div>
                                         </div>
                                         <div class="address-section">
@@ -112,16 +111,65 @@ jQuery(document).ready(function($) {
                 order_id: orderId,
             },
             success: function(response) {
+                console.log("print-shipping success:", response); // Check the full response in the console
                 if (response.success) {
+                    
+                    let cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
+                    /*console.log("CSS File URL:", cssUrl);*/
+
+                    let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
+                    let compName = ajax_object.comp_name;
+                    let compAddress = ajax_object.comp_address;
+                    let compPhoneNumber = ajax_object.comp_phone_number;
+                    let shippingContent = `
+                    <html>
+                        <head>
+                            <title>Shipping</title>
+                            <link rel="stylesheet" type="text/css" href="${cssUrl}" media="all">
+                        </head>
+                        <body>
+                            <div id="shipping-header">${compName}</div>
+                            <div id="shipping-body">
+                                <div id="order-detail">
+                                    <div><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
+                                    <div><span>Order No:&nbsp</span>${response.data.order_id}</div>
+                                    <div><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
+                                    <table>
+                                        <tr>
+                                            <td>Total Amount:</td>
+                                            <td>${response.data.total_amount}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Payment Method:</td>
+                                            <td>${response.data.payment_method}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="shipping-address">
+                                    ${response.data.shipping_address}
+                                </div>
+                            </div>
+                            <div id="shipping-footer">
+                                <div>${compAddress}</div>
+                                <div>${compPhoneNumber}</div>
+                            </div>
+                        </body>
+                    </html>
+                    `;
+
                     // Open a new window and display the invoice content                    
                     let printWindow = window.open('', '_blank');
-                    printWindow.document.write('<html><head><title>Invoice</title></head><body>'); // Open a full HTML document
-                    printWindow.document.write(response.data); // Write invoice HTML to the new window
-                    printWindow.document.write('</body></html>'); // Close the HTML document
-                    printWindow.document.close();
-                    printWindow.print(); // Trigger print dialog
+                    printWindow.document.write(shippingContent); // Write the HTML content
+                    printWindow.document.close(); // Close the document to signal the browser to load it
+
+                    // Wait for the print window to fully load the CSS and content
+                    printWindow.onload = function () {
+                        console.log("Print window content loaded and styled.");
+                        console.log("Stylesheets:", printWindow.document.styleSheets);
+                        printWindow.print(); // Trigger the print dialog
+                    };
                 } else {
-                    console.log('Invoice generation failed: ', response); // Log error response
+                    console.log('Shipping generation failed: ', response); // Log error response
                     alert('Failed to generate shipping label.');
                 }
             },
