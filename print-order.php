@@ -285,8 +285,8 @@ function handle_generate_shipping() {
         $payment_method = $order_details['payment_method_title'];
         $customer_note = $order_details['customer_note'];
 
-        // Get the total amount
-        $total_amount = $order->get_total();
+        // Get the total amount with comma separation
+        $total_amount = number_format($order->get_total(), 0); // Formats the amount with two decimal places and commas
 
         // Prepare the response
         $response = array(
