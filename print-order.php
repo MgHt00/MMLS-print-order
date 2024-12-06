@@ -147,12 +147,19 @@ function get_order_details($order) {
     $payment_method = $order->get_payment_method(); // Internal payment method key (e.g., 'cod', 'paypal')
     $payment_method_title = $order->get_payment_method_title(); // Human-readable title (e.g., 'Cash on Delivery', 'PayPal')
 
+    // Fetch customer note
+    $customer_note = $order->get_customer_note();
+    if (!$customer_note) {
+        $customer_note = ''; // Default to empty if no note exists
+    }
+
     return array(
         'shipping_address' => $shipping_address,
         'phone_number'     => $phone_number,
         'order_date'       => $order_date,
         'payment_method'      => $payment_method,
         'payment_method_title' => $payment_method_title,
+        'customer_note'    => $customer_note, 
     );
 }
 
@@ -276,6 +283,7 @@ function handle_generate_shipping() {
         $phone_number = $order_details['phone_number'];
         $order_date = $order_details['order_date'];
         $payment_method = $order_details['payment_method_title'];
+        $customer_note = $order_details['customer_note'];
 
         // Get the total amount
         $total_amount = $order->get_total();
@@ -288,6 +296,7 @@ function handle_generate_shipping() {
             'phone_number' => $phone_number,
             /*'order_date' => $order_date,*/
             'payment_method' => $payment_method,
+            'customer_note' => $customer_note,
             'total_amount' => $total_amount,
         );
 

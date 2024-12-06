@@ -146,7 +146,8 @@ jQuery(document).ready(function($) {
                                     </table>
                                 </div>
                                 <div id="shipping-address">
-                                    ${response.data.shipping_address}
+                                    <div>${response.data.shipping_address}</div>
+                                    <div>${response.data.customer_note}</div>
                                 </div>
                             </div>
                             <div id="shipping-footer">
