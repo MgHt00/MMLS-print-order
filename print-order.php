@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: MMLS Print Order
- * Description: Adds "Print Invoice" and "Print Shipping" buttons to the WooCommerce order page.
- * Version: 1.1
- * Author: Win Htoo Shwe
+ * Description: Enhances WooCommerce by adding customizable "Print Invoice" and "Print Shipping" buttons directly to the order management page. Generate clean, professional invoices and shipping labels with order details and company branding, ready for printing.
+ * Version: 1.0
+ * Author: Win Htoo Shwe, OpenAI's ChatGPT (Code Assistance)
  */
 
 // Exit if accessed directly
@@ -11,32 +11,10 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
-function ensure_jquery_admin() {
-    if (is_admin()) {
-        // Explicitly load jQuery in the admin area
-        wp_enqueue_script('jquery');
-    }
-}
-add_action('admin_enqueue_scripts', 'ensure_jquery_admin');
-
-// Handle test AJAX action
-/*function handle_test_ajax_action() {
-    // Return a response to check if the request is successful
-    wp_send_json_success('Test AJAX action successful!');
-}
-add_action( 'wp_ajax_test_ajax_action', 'handle_test_ajax_action' );
-add_action( 'wp_ajax_nopriv_test_ajax_action', 'handle_test_ajax_action' ); // For non-logged-in users
-*/
-
 // Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts( $hook ) {
     $current_screen = get_current_screen();
     $company_details = include plugin_dir_path(__FILE__) . 'company-details.php';
-
-    // Ensure jQuery is loaded
-    if ( !wp_script_is( 'jquery', 'enqueued' ) ) {
-        wp_enqueue_script('jquery');
-    }
 
     // Check if we are on the WooCommerce orders page or a specific order page
     if ( $current_screen->id === 'woocommerce_page_wc-orders' || $current_screen->post_type === 'shop_order' ) {
