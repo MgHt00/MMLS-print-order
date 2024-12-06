@@ -116,6 +116,39 @@ function wc_print_order_info( $order ) {
     </div>';
 }
 
+function get_order_details($order) {
+    if (!$order instanceof WC_Order) {
+        return false; // Ensure the input is a valid order object
+    }
+
+    // Fetch shipping address
+    $shipping_address = $order->get_formatted_shipping_address();
+    if (!$shipping_address) {
+        $shipping_address = '';
+    }
+
+    // Fetch billing phone number
+    $phone_number = $order->get_billing_phone();
+    if (!$phone_number) {
+        $phone_number = '';
+    }
+
+    // Fetch order date
+    $order_date = $order->get_date_created();
+    if ($order_date) {
+        $order_date = $order_date->date('F j, Y'); // Format the date
+    } else {
+        $order_date = '';
+    }
+
+    return array(
+        'shipping_address' => $shipping_address,
+        'phone_number'     => $phone_number,
+        'order_date'       => $order_date,
+    );
+}
+
+
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {
     // Check for required data (order ID)
@@ -126,41 +159,23 @@ function handle_generate_invoice() {
 
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
-
+        
         if (!$order) {
             wp_send_json_error(array('message' => 'Order not found.'));
             return;
         }
 
+        // Reuse the helper function to get order details
+        $order_details = get_order_details($order);
+
+        $shipping_address = $order_details['shipping_address'];
+        $phone_number = $order_details['phone_number'];
+        $order_date = $order_details['order_date'];
+
         $subtotal = 0;
-
-        // Fetch shipping address
-        $shipping_address = $order->get_formatted_shipping_address();
-        if (!$shipping_address) {
-            /*$shipping_address = 'No shipping address provided';*/
-            $shipping_address = '';
-        }
-
-        // Fetch billing phone number
-        $phone_number = $order->get_billing_phone();
-        if (!$phone_number) {
-            $phone_number = '';
-        }
-
-        // Fetch order date
-        $order_date = $order->get_date_created();
-        if ($order_date) {
-            $order_date = $order_date->date('F j, Y'); // Format the date
-            //F: Full month name (e.g., December).
-            //j: Day of the month without leading zeros.
-            //Y: Full four-digit year.
-        } else {
-            $order_date = '';
-        }
 
 
         // Start generating the invoice content
-        /* $invoice_content = '<h1>Invoice for Order #' . $order_id . '</h1>';*/
         $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
 
         // Loop through the order items and display their details
@@ -241,7 +256,22 @@ function handle_generate_shipping() {
             $shipping_content .= '<p><strong>Shipping Address:</strong> ' . $order->get_formatted_shipping_address() . '</p>';
             $shipping_content .= '<p><strong>Shipping Method:</strong> ' . $order->get_shipping_method() . '</p>';
 
+            /*
             wp_send_json_success($shipping_content); // Return shipping content
+            */   
+
+            // Prepare the response
+            $response = array(
+                'success' => true,
+                'shipping' => $shipping_content,
+                'order_id' => $order_id,
+                'shipping_address' => $shipping_address,
+                'phone_number' => $phone_number,
+                'order_date' => $order_date,
+            );
+
+            // Send the response as JSON
+            wp_send_json_success($response);
         } else {
             wp_send_json_error('Invalid order');
         }
