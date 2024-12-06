@@ -2,6 +2,7 @@ html {
   --base-font-size: 11px;
   --header-font-size: 12px;
   --admin-font-size: 14px;
+  --shipping-base-font-size: 13px;
 }
 
 @media print {
@@ -57,12 +58,13 @@ html {
   max-width: 1000px;
   border-collapse: collapse;
   margin-bottom: 5px;
-  
 }
 
 #invoice-container table, 
 #invoice-container th, 
-#invoice-container td {
+#invoice-container td,
+#order-detail table,
+#order-detail td {
   border: 1px solid #ddd;
 }
 
@@ -113,7 +115,8 @@ html {
   /*margin: 0 auto;*/
 }
 
-.header-content span {
+.header-content span,
+#order-detail span {
   font-weight: bold;
 }
 
@@ -124,7 +127,8 @@ html {
   flex-direction: column;
 }
 
-.logo-section img {
+.logo-section img,
+#order-detail img {
   max-width: 200px;
   height: auto;
 }
@@ -172,8 +176,9 @@ html {
 }
 
 
-/* Footer */
-#footer-container {
+/* for invoice footer */
+#footer-container,
+#shipping-footer {
   position: fixed; /* Position it at the fixed position on the screen */
   bottom: 5px; /* Align it at the bottom of the page */
   left: 20px; /* Align it to the left of the page */
@@ -190,4 +195,43 @@ html {
 #footer-container #footer-contact-info {
   display: flex;
   flex-direction: row;
+}
+
+/* for shipping */
+#shipping-body,
+#shipping-address,
+#shipping-footer {
+  font-family: Arial, sans-serif;
+}
+
+#shipping-body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  justify-content: space-between;
+}
+
+#shipping-body div {
+  padding: 0px;
+  margin: 0px;
+}
+
+#shipping-body #order-detail {
+  flex: 1;
+}
+
+#shipping-body #shipping-address {
+  flex: 2;
+}
+
+#order-detail table {
+  border-collapse: collapse;
+}
+
+#shipping-footer {
+  /* main styling is shared with footer-container*/
+  border-top: 1px solid #ddd;
+  font-size: var(--shipping-base-font-size, 13px);
+  padding-top: 10px;
 }

@@ -1,6 +1,8 @@
 jQuery(document).ready(function($) {
-    console.log("jQuery:", $); // This should work
+    /*
+    console.log("jQuery:", $); // Log jQuery for debugging
     console.log('ajaxurl:', ajax_object.ajaxurl); // Log ajaxurl for debugging
+    */
 
     // Handle the Print Invoice button click
     $('#print-invoice').click(function(e) {
@@ -128,7 +130,7 @@ jQuery(document).ready(function($) {
                             <link rel="stylesheet" type="text/css" href="${cssUrl}" media="all">
                         </head>
                         <body>
-                            <div id="shipping-header">${compName}</div>
+                            <!--div id="shipping-header">${compName}</div-->
                             <div id="shipping-body">
                                 <div id="order-detail">
                                     <div><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
@@ -152,7 +154,7 @@ jQuery(document).ready(function($) {
                             </div>
                             <div id="shipping-footer">
                                 <div>${compAddress}</div>
-                                <div>${compPhoneNumber}</div>
+                                <div>Tel:&nbsp;${compPhoneNumber}</div>
                             </div>
                         </body>
                     </html>
