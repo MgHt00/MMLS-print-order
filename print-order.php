@@ -125,9 +125,21 @@ function get_order_details($order) {
 
     // Fetch shipping address
     $shipping_address = $order->get_formatted_shipping_address();
-    if (!$shipping_address) {
+    if ($shipping_address) {
+        $address_parts = explode('<br/>', $shipping_address, 2);
+        // splits the string at the first <br /> tag. ...
+        // ... The 2 parameter ensures the split happens only once, creating an array with two parts:    
+        // ... $address_parts[0] contains the name.
+        // ... $address_parts[1] contains the rest of the address.
+
+        $shipping_name = isset($address_parts[0]) ? trim($address_parts[0]) : '';
+        $shipping_address_only = isset($address_parts[1]) ? trim($address_parts[1]) : '';
+    } else {
         $shipping_address = '';
+        $shipping_name = '';
+        $shipping_address_only = '';
     }
+    /*error_log('Shipping Address: ' . $shipping_address);*/
 
     // Fetch billing phone number
     $phone_number = $order->get_billing_phone();
@@ -155,6 +167,8 @@ function get_order_details($order) {
 
     return array(
         'shipping_address' => $shipping_address,
+        'shipping_name' => $shipping_name,
+        'shipping_address_only' => $shipping_address_only,
         'phone_number'     => $phone_number,
         'order_date'       => $order_date,
         'payment_method'      => $payment_method,
@@ -280,6 +294,8 @@ function handle_generate_shipping() {
         $order_details = get_order_details($order);
 
         $shipping_address = $order_details['shipping_address'];
+        $shipping_name = $order_details['shipping_name'];
+        $shipping_address_only = $order_details['shipping_address_only'];
         $phone_number = $order_details['phone_number'];
         $order_date = $order_details['order_date'];
         $payment_method = $order_details['payment_method_title'];
@@ -293,6 +309,8 @@ function handle_generate_shipping() {
             'success' => true,
             'order_id' => $order_id,
             'shipping_address' => $shipping_address,
+            'shipping_name' => $shipping_name,
+            'shipping_address_only' => $shipping_address_only,
             'phone_number' => $phone_number,
             /*'order_date' => $order_date,*/
             'payment_method' => $payment_method,

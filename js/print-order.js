@@ -119,6 +119,9 @@ jQuery(document).ready(function($) {
                     let cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
                     /*console.log("CSS File URL:", cssUrl);*/
 
+                    console.log(`shipping name:${response.data.shipping_name}`);
+                    console.log(`shipping address only:${response.data.shipping_address_only}`);
+
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
                     let compName = ajax_object.comp_name;
                     let compAddress = ajax_object.comp_address;
@@ -135,7 +138,6 @@ jQuery(document).ready(function($) {
                                 <div id="order-detail">
                                     <div><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
                                     <div><span>Order No:&nbsp</span>${response.data.order_id}</div>
-                                    <div><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
                                     <table>
                                         <tr>
                                             <td>Total Amount:</td>
@@ -148,7 +150,9 @@ jQuery(document).ready(function($) {
                                     </table>
                                 </div>
                                 <div id="shipping-address">
-                                    <div>${response.data.shipping_address}</div>
+                                    <div>${response.data.shipping_name}</div>
+                                    <div><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
+                                    <div>${response.data.shipping_address_only}</div>
                                     <div>${response.data.customer_note}</div>
                                 </div>
                             </div>
