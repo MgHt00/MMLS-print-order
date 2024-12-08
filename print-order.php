@@ -125,21 +125,30 @@ function get_order_details($order) {
 
     // Fetch shipping address
     $shipping_address = $order->get_formatted_shipping_address();
-    if ($shipping_address) {
-        $address_parts = explode('<br/>', $shipping_address, 2);
+    if ($shipping_address) {        
+        // Normalize line breaks to a consistent <br />
+        $normalized_address = str_replace(array('<br>', '<br/>', "\n"), '<br />', $shipping_address);
+
+        // Log the normalized address for debugging
+        error_log('Normalized Shipping Address: ' . $normalized_address);
+
+        // Split at the first <br /> to separate name and remaining address
+        $address_parts = explode('<br />', $normalized_address, 2);
         // splits the string at the first <br /> tag. ...
         // ... The 2 parameter ensures the split happens only once, creating an array with two parts:    
         // ... $address_parts[0] contains the name.
-        // ... $address_parts[1] contains the rest of the address.
+        // ... $address_parts[1] contains the rest of the address.// Normalize line breaks to a consistent <br />
 
+        // Extract shipping name (first part)
         $shipping_name = isset($address_parts[0]) ? trim($address_parts[0]) : '';
+
+        // Extract the remaining address
         $shipping_address_only = isset($address_parts[1]) ? trim($address_parts[1]) : '';
     } else {
         $shipping_address = '';
         $shipping_name = '';
         $shipping_address_only = '';
     }
-    /*error_log('Shipping Address: ' . $shipping_address);*/
 
     // Fetch billing phone number
     $phone_number = $order->get_billing_phone();
