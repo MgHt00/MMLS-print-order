@@ -120,7 +120,9 @@ jQuery(document).ready(function($) {
                     /*console.log("CSS File URL:", cssUrl);*/
 
                     console.log(`shipping name:${response.data.shipping_name}`);
-                    console.log(`shipping address only:${response.data.shipping_address_only}`);
+                    console.log(`shipping address line:${response.data.shipping_address_line}`);
+                    console.log(`shipping city:${response.data.shipping_city}`);
+                    console.log(`shipping state:${response.data.shipping_state_zip}`);
 
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
                     let compName = ajax_object.comp_name;
@@ -152,7 +154,9 @@ jQuery(document).ready(function($) {
                                 <div id="shipping-address">
                                     <div>${response.data.shipping_name}</div>
                                     <div><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
-                                    <div>${response.data.shipping_address_only}</div>
+                                    <div>${response.data.shipping_address_line}</div>
+                                    <div>${response.data.shipping_city}</div>
+                                    <div>${response.data.shipping_state_zip}</div>
                                     <div>${response.data.customer_note}</div>
                                 </div>
                             </div>

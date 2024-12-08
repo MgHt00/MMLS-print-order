@@ -126,7 +126,7 @@ function get_order_details($order) {
     // Fetch shipping address
     $shipping_address = $order->get_formatted_shipping_address();
     if ($shipping_address) {        
-        // Normalize line breaks to a consistent <br />
+        // Normalize line breaks to a consistent <br />. This ensures all line breaks are converted to <br />.
         $normalized_address = str_replace(array('<br>', '<br/>', "\n"), '<br />', $shipping_address);
 
         // Log the normalized address for debugging
@@ -142,12 +142,29 @@ function get_order_details($order) {
         // Extract shipping name (first part)
         $shipping_name = isset($address_parts[0]) ? trim($address_parts[0]) : '';
 
-        // Extract the remaining address
-        $shipping_address_only = isset($address_parts[1]) ? trim($address_parts[1]) : '';
+        // Extract the remaining address parts
+        $remaining_parts = array_slice($address_parts, 1);
+
+        // Now, split the remaining parts further
+        $shipping_address_line = isset($remaining_parts[0]) ? trim($remaining_parts[0]) : '';
+        $city_state_zip = isset($remaining_parts[1]) ? trim($remaining_parts[1]) : '';
     } else {
         $shipping_address = '';
         $shipping_name = '';
-        $shipping_address_only = '';
+        $shipping_address_line = '';
+        $city_state_zip = '';
+    }
+
+    // Further split the city, state, and ZIP code if available
+    $city = '';
+    $state_zip = '';
+
+    if ($city_state_zip) {
+        // Assume the format: City, State ZIP
+        $city_state_parts = explode(',', $city_state_zip, 2);
+
+        $city = isset($city_state_parts[0]) ? trim($city_state_parts[0]) : '';
+        $state_zip = isset($city_state_parts[1]) ? trim($city_state_parts[1]) : '';
     }
 
     // Fetch billing phone number
@@ -174,10 +191,17 @@ function get_order_details($order) {
         $customer_note = ''; // Default to empty if no note exists
     }
 
+    error_log('shipping_address_line: ' . $shipping_address_line);
+    error_log('city_state_zip: ' . $city_state_zip);
+    error_log('$city: ' . $city);
+    error_log('$state_zip: ' . $state_zip);
+
     return array(
         'shipping_address' => $shipping_address,
         'shipping_name' => $shipping_name,
-        'shipping_address_only' => $shipping_address_only,
+        'shipping_address_line' => $shipping_address_line,
+        'city' => $city,
+        'state_zip' => $state_zip,
         'phone_number'     => $phone_number,
         'order_date'       => $order_date,
         'payment_method'      => $payment_method,
@@ -304,7 +328,9 @@ function handle_generate_shipping() {
 
         $shipping_address = $order_details['shipping_address'];
         $shipping_name = $order_details['shipping_name'];
-        $shipping_address_only = $order_details['shipping_address_only'];
+        $shipping_address_line = $order_details['shipping_address_line'];
+        $shipping_city = $order_details['city'];
+        $shipping_state_zip =  $order_details['shipping_state_zip'];
         $phone_number = $order_details['phone_number'];
         $order_date = $order_details['order_date'];
         $payment_method = $order_details['payment_method_title'];
