@@ -47,18 +47,15 @@ jQuery(document).ready(function($) {
                                             </div>
                                         </div>
                                         <div class="address-section">
-                                            <div class="address-header">
-                                                <span>From:</span>
-                                            </div>
-                                            <div class="address-details">
-                                                ${compAddress}
-                                            </div>
-                                            <div class="address-spacer"></div>
-                                            <div class="shipping-address-header">
-                                                <span>Shipping Address:
-                                            </div>
-                                            <div class="address-details">
-                                                ${response.data.shipping_address}
+                                            <div class="from-and-to-addresses">
+                                                <div class="from-address">
+                                                    <div class="address-header"><span>From:</span></div>
+                                                    <div class="address-details">${compAddress}</div>
+                                                </div>
+                                                <div class="to-address">
+                                                    <div class="shipping-address-header"><span>Shipping Address:</div>
+                                                    <div class="address-details">${response.data.shipping_address}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
