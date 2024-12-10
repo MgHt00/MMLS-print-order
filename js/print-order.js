@@ -119,10 +119,12 @@ jQuery(document).ready(function($) {
                     let cssUrl = `${ajax_object.plugin_url}/css/print-order-style.css`;
                     /*console.log("CSS File URL:", cssUrl);*/
 
+                    /*
                     console.log(`shipping name:${response.data.shipping_name}`);
                     console.log(`shipping address line:${response.data.shipping_address_line}`);
                     console.log(`shipping city:${response.data.shipping_city}`);
                     console.log(`shipping state:${response.data.shipping_state_zip}`);
+                    */
 
                     let logoUrl = `${ajax_object.plugin_url}/images/logo.png`;
                     let compName = ajax_object.comp_name;
@@ -177,8 +179,10 @@ jQuery(document).ready(function($) {
 
                     // Wait for the print window to fully load the CSS and content
                     printWindow.onload = function () {
+                        /*
                         console.log("Print window content loaded and styled.");
                         console.log("Stylesheets:", printWindow.document.styleSheets);
+                        */
                         printWindow.print(); // Trigger the print dialog
                     };
                 } else {
