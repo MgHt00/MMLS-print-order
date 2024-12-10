@@ -3,6 +3,8 @@ html {
   --header-font-size: 12px;
   --admin-font-size: 14px;
   --shipping-base-font-size: 13px;
+  --shipping-address-font-size: 20px;
+  --shipping-note-font-size: 17px;
 }
 
 @media print {
@@ -116,7 +118,8 @@ html {
 }
 
 .header-content span,
-#order-detail span {
+#order-detail span,
+#shipping-address span {
   font-weight: bold;
 }
 
@@ -225,8 +228,31 @@ html {
   flex: 2;
 }
 
+#shipping-body #order-detail {
+  border-right: 1px solid #ddd;
+  margin-right: 30px;
+}
+
 #order-detail table {
   border-collapse: collapse;
+}
+
+#shipping-address {
+  line-height: 1.8;
+}
+
+#shipping-address{
+  font-size: var(--shipping-address-font-size, 20px); 
+}
+
+#shipping-address #shipping-state-city-combined {
+  display: flex;
+  gap: 3px;
+}
+
+#shipping-address .shipping-note {
+  font-size: var(--shipping-note-font-size, 17px);
+  padding-top: 20px;
 }
 
 #shipping-footer {

@@ -152,12 +152,14 @@ jQuery(document).ready(function($) {
                                     </table>
                                 </div>
                                 <div id="shipping-address">
-                                    <div>${response.data.shipping_name}</div>
-                                    <div><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
-                                    <div>${response.data.shipping_address_line}</div>
-                                    <div>${response.data.shipping_city}</div>
-                                    <div>${response.data.shipping_state_zip}</div>
-                                    <div>${response.data.customer_note}</div>
+                                    <div class="shipping-name">${response.data.shipping_name}</div>
+                                    <div class="shipping-phone"><span>Tel:&nbsp;</span>${response.data.phone_number}</div>
+                                    <div class="shipping-address">${response.data.shipping_address_line}</div>
+                                    <div id="shipping-state-city-combined">
+                                        <div class="shipping-city">${response.data.shipping_city}</div>
+                                        <div class="shipping-state">${response.data.shipping_state_zip}</div>
+                                    </div>
+                                    <div class="shipping-note"><span>မှတ်ချက် ။&nbsp;</span>${response.data.customer_note}</div>
                                 </div>
                             </div>
                             <div id="shipping-footer">
