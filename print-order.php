@@ -251,7 +251,7 @@ function handle_generate_invoice() {
             $invoice_content .= '<td>' . $item_sku . '</td>';
             $invoice_content .= '<td>' . wc_price($original_price) . '</td>';
             $invoice_content .= '<td>' . $item_quantity . '</td>';
-            $invoice_content .= '<td>' . wc_price($item_total) . '</td>';
+            $invoice_content .= '<td class="stick-to-right">' . wc_price($item_total) . '</td>';
             $invoice_content .= '</tr>';
             
             // Calculate subtotals
@@ -265,13 +265,13 @@ function handle_generate_invoice() {
         // Add the subtotal row
         $invoice_content .= '<tr>';
         $invoice_content .= '<td colspan="4" class="stick-to-right">Sub Total</td>';
-        $invoice_content .= '<td>' . wc_price($original_subtotal) . '</td>';
+        $invoice_content .= '<td class="stick-to-right">' . wc_price($original_subtotal) . '</td>';
         $invoice_content .= '</tr>';
 
         // Add the discount row
         $invoice_content .= '<tr>';
         $invoice_content .= '<td colspan="4" class="stick-to-right">Discount</td>';
-        $invoice_content .= '<td>' . wc_price($total_discount) . '</td>';
+        $invoice_content .= '<td class="stick-to-right">' . wc_price($total_discount) . '</td>';
         $invoice_content .= '</tr>';
 
         // Get the shipping total
@@ -280,13 +280,13 @@ function handle_generate_invoice() {
         // Add the shipping row
         $invoice_content .= '<tr>';
         $invoice_content .= '<td colspan="4" class="stick-to-right">Shipping</td>';
-        $invoice_content .= '<td>' . wc_price($shipping_total) . '</td>';
+        $invoice_content .= '<td class="stick-to-right">' . wc_price($shipping_total) . '</td>';
         $invoice_content .= '</tr>';
         
         // Add the total row
         $invoice_content .= '<tr>';
         $invoice_content .= '<td colspan="4" class="stick-to-right"><strong>Total</strong></td>';
-        $invoice_content .= '<td><strong>' . wc_price($order->get_total()) . '</strong></td>';
+        $invoice_content .= '<td class="stick-to-right"><strong>' . wc_price($order->get_total()) . '</strong></td>';
         $invoice_content .= '</tr>';
 
         // Close the table
