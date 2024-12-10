@@ -223,38 +223,55 @@ function handle_generate_invoice() {
         $phone_number = $order_details['phone_number'];
         $order_date = $order_details['order_date'];
 
+        $original_subtotal = 0;
         $subtotal = 0;
+        $total_discount = 0;
 
-
-        // Start generating the invoice content
-        $invoice_content .= '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
+        // Initialize the invoice content
+        $invoice_content = '<table><tr><th>Item</th><th>SKU</th><th>Price</th><th>Quantity</th><th>Total</th></tr>';
 
         // Loop through the order items and display their details
         foreach ($order->get_items() as $item_id => $item) {
             $product = $item->get_product();
             $item_name = esc_html($item->get_name());
             $item_sku = $product ? esc_html($product->get_sku()) : 'N/A';
-            $item_price = wc_price($item->get_total() / $item->get_quantity()); // Price per item
-            $item_quantity = esc_html($item->get_quantity());
-            $item_total = wc_price($item->get_total());
+
+            // Original price per item (regular price from product)
+            $original_price = $product ? floatval($product->get_regular_price()) : 0;
+            
+            // Discounted total price (total amount for this item in the order)
+            $item_total = $item->get_total();
+            
+            // Quantity of the item
+            $item_quantity = intval($item->get_quantity());
 
             // Add row for each item
             $invoice_content .= '<tr>';
             $invoice_content .= '<td>' . $item_name . '</td>';
             $invoice_content .= '<td>' . $item_sku . '</td>';
-            $invoice_content .= '<td>' . $item_price . '</td>';
+            $invoice_content .= '<td>' . wc_price($original_price) . '</td>';
             $invoice_content .= '<td>' . $item_quantity . '</td>';
-            $invoice_content .= '<td>' . $item_total . '</td>';
+            $invoice_content .= '<td>' . wc_price($item_total) . '</td>';
             $invoice_content .= '</tr>';
             
-            // Accumulate the subtotal
-            $subtotal += $item->get_total(); // Add the item's total (excluding tax)
+            // Calculate subtotals
+            $subtotal += $item_total;                      // Total after discounts
+            $original_subtotal += $original_price * $item_quantity; // Total before discounts
         }
+
+        // Calculate the total discount
+        $total_discount = $original_subtotal - $subtotal;
 
         // Add the subtotal row
         $invoice_content .= '<tr>';
         $invoice_content .= '<td colspan="4" class="stick-to-right">Sub Total</td>';
-        $invoice_content .= '<td>' . wc_price($subtotal) . '</td>';
+        $invoice_content .= '<td>' . wc_price($original_subtotal) . '</td>';
+        $invoice_content .= '</tr>';
+
+        // Add the discount row
+        $invoice_content .= '<tr>';
+        $invoice_content .= '<td colspan="4" class="stick-to-right">Discount</td>';
+        $invoice_content .= '<td>' . wc_price($total_discount) . '</td>';
         $invoice_content .= '</tr>';
 
         // Get the shipping total
@@ -292,6 +309,7 @@ function handle_generate_invoice() {
         wp_send_json_error(array('message' => 'Order ID not found.'));
     }
 }
+
 
 add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
 
