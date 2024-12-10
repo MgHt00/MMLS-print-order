@@ -2,6 +2,7 @@ html {
   --base-font-size: 11px;
   --header-font-size: 12px;
   --admin-font-size: 14px;
+  --shipping-order-info-font-size: 18px;
   --shipping-base-font-size: 13px;
   --shipping-address-font-size: 20px;
   --shipping-note-font-size: 17px;
@@ -233,8 +234,25 @@ html {
   margin-right: 30px;
 }
 
+#order-detail {
+  font-size: var(--shipping-order-info-font-size, 18px);
+}
+
 #order-detail table {
+  /* other stylings shared with invoice-container */
   border-collapse: collapse;
+}
+
+#order-detail td {
+  padding: 8px;
+}
+
+#order-detail .comp-logo {
+  margin-bottom: 10px;
+}
+
+#order-detail .order-number {
+  margin-bottom: 20px;
 }
 
 #shipping-address {

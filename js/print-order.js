@@ -138,15 +138,15 @@ jQuery(document).ready(function($) {
                             <!--div id="shipping-header">${compName}</div-->
                             <div id="shipping-body">
                                 <div id="order-detail">
-                                    <div><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
-                                    <div><span>Order No:&nbsp</span>${response.data.order_id}</div>
-                                    <table>
+                                    <div class="comp-logo"><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
+                                    <div class="order-number">Order No:&nbsp${response.data.order_id}</div>
+                                    <table class="order-info-table">
                                         <tr>
                                             <td>Total Amount:</td>
-                                            <td>${response.data.total_amount}</td>
+                                            <td><span>${response.data.total_amount}</span></td>
                                         </tr>
                                         <tr>
-                                            <td>Payment Method:</td>
+                                            <td>Payment:</td>
                                             <td>${response.data.payment_method}</td>
                                         </tr>
                                     </table>
