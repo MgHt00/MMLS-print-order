@@ -95,26 +95,12 @@ function wc_print_buttons_meta_box_content() {
             echo '<button id="print-invoice" type="button" class="button woocommerce-button" data-order-id="' . esc_attr( $order_id ) . '">Print Invoice</button>';
             echo '<button id="print-shipping" type="button" class="button woocommerce-button" data-order-id="' . esc_attr( $order_id ) . '">Print Shipping</button>';
             echo '</div>';
-            //echo wc_print_order_info($order);
         } else {
             echo '<p>Order data could not be fetched.</p>';
         }
     } else {
         echo '<p>This section is not available for new orders.</p>';
     }
-}
-
-// Helper function to render order info (currently unused)
-function wc_print_order_info( $order ) {
-    return '<div id="order-info-sidebar" class="mmls-order-info">
-        <h3>Order Information</h3>
-        <p><strong>Order ID:</strong> ' . esc_html( $order->get_id() ) . '</p>
-        <p><strong>Status:</strong> ' . esc_html( wc_get_order_status_name( $order->get_status() ) ) . '</p>
-        <p><strong>Total:</strong> ' . esc_html( $order->get_total() ) . ' ' . esc_html( $order->get_currency() ) . '</p>
-        <p><strong>Customer Name:</strong> ' . esc_html( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ) . '</p>
-        <p><strong>Billing Email:</strong> ' . esc_html( $order->get_billing_email() ) . '</p>
-        <p><strong>Billing Address:</strong> ' . esc_html( $order->get_formatted_billing_address() ) . '</p>
-    </div>';
 }
 
 // Helper function to returns the required data (shipping address, phone number, etc.)
@@ -198,7 +184,6 @@ function get_order_details($order) {
         'customer_note'    => $customer_note, 
     );
 }
-
 
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {
@@ -309,8 +294,6 @@ function handle_generate_invoice() {
         wp_send_json_error(array('message' => 'Order ID not found.'));
     }
 }
-
-
 add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
 
 // Handle AJAX request to generate the shipping label
