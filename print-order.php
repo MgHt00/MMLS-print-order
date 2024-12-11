@@ -203,10 +203,11 @@ function get_order_barcode($order_id) {
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {
     // Check for required data (order ID)
-    if (isset($_POST['order_id'])) {
-        $order_id = intval($_POST['order_id']);
-        error_log('generate_invoice called');
-        error_log('Order ID: ' . $order_id);
+    $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : 0;
+
+    if ($order_id > 0) {
+        /*error_log('generate_invoice called');
+        error_log('Order ID: ' . $order_id);*/
 
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
@@ -312,6 +313,7 @@ function handle_generate_invoice() {
     } else {
         // If no order ID is found
         wp_send_json_error(array('message' => 'Order ID not found.'));
+        wp_die();
     }
 }
 add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
@@ -375,6 +377,7 @@ function handle_generate_shipping() {
     } else {
         // If no order ID is found
         wp_send_json_error(array('message' => 'Order ID not found.'));
+        wp_die();
     }
 }
 add_action('wp_ajax_generate_shipping', 'handle_generate_shipping');
