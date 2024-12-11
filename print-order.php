@@ -11,6 +11,9 @@ if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// To include the Composer autoloader
+require_once __DIR__ . '/vendor/autoload.php';
+
 // Enqueue plugin scripts and styles
 function wc_print_buttons_enqueue_scripts( $hook ) {
     $current_screen = get_current_screen();
@@ -185,6 +188,18 @@ function get_order_details($order) {
     );
 }
 
+// Helper function to generate barcode dynamically and output it directly as a data URI
+function get_order_barcode($order_id) {
+    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+    $barcode = $generator->getBarcode($order_id, $generator::TYPE_CODE_128);
+
+    // Encode the barcode as a Base64 string
+    $barcode_base64 = base64_encode($barcode);
+
+    // Return the Base64 image
+    return 'data:image/png;base64,' . $barcode_base64;
+}
+
 // Handle AJAX request to generate the invoice
 function handle_generate_invoice() {
     // Check for required data (order ID)
@@ -207,6 +222,10 @@ function handle_generate_invoice() {
         $shipping_address = $order_details['shipping_address'];
         $phone_number = $order_details['phone_number'];
         $order_date = $order_details['order_date'];
+
+        // Generate barcode with the helper function
+        $barcode_data_uri = get_order_barcode($order_id);
+        $order_number_barcode_URL = esc_attr($barcode_data_uri);
 
         $original_subtotal = 0;
         $subtotal = 0;
@@ -285,6 +304,7 @@ function handle_generate_invoice() {
             'shipping_address' => $shipping_address,
             'phone_number' => $phone_number,
             'order_date' => $order_date,
+            'order_number_barcode_URL' => $order_number_barcode_URL,
         );
 
         // Send the response as JSON

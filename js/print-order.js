@@ -42,6 +42,7 @@ jQuery(document).ready(function($) {
                                             <img src="${logoUrl}" alt="Myanmar Lifestyle" />
                                             <div class="order-info">
                                                 <p><span>Order No:&nbsp;</span> ${response.data.order_id}</p>
+                                                <p><img src="${response.data.order_number_barcode_URL}"></p>
                                                 <p><span>Date:&nbsp;</span> ${response.data.order_date}</p>
                                                 <p><span>Phone Number:&nbsp;</span> ${response.data.phone_number}</p>
                                             </div>
