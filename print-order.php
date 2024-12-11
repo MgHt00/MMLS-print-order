@@ -336,6 +336,10 @@ function handle_generate_shipping() {
         // Reuse the helper function to get order details
         $order_details = get_order_details($order);
 
+        // Generate barcode with the helper function
+        $barcode_data_uri = get_order_barcode($order_id);
+        $order_number_barcode_URL = esc_attr($barcode_data_uri);
+
         $shipping_address = $order_details['shipping_address'];
         $shipping_name = $order_details['shipping_name'];
         $shipping_address_line = $order_details['shipping_address_line'];
@@ -363,6 +367,7 @@ function handle_generate_shipping() {
             'payment_method' => $payment_method,
             'customer_note' => $customer_note,
             'total_amount' => $total_amount,
+            'order_number_barcode_URL' => $order_number_barcode_URL,
         );
 
         // Send the response as JSON

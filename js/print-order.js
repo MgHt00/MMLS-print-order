@@ -139,6 +139,7 @@ jQuery(document).ready(function($) {
                             <div id="shipping-body">
                                 <div id="order-detail">
                                     <div class="comp-logo"><img src="${logoUrl}" alt="Myanmar Lifestyle" /></div>
+                                    <div class="order-number-barcode"><img src="${response.data.order_number_barcode_URL}"></div>
                                     <div class="order-number">Order No:&nbsp${response.data.order_id}</div>
                                     <table class="order-info-table">
                                         <tr>
@@ -163,8 +164,8 @@ jQuery(document).ready(function($) {
                                 </div>
                             </div>
                             <div id="shipping-footer">
-                                <div>${compAddress}</div>
-                                <div>Tel:&nbsp;${compPhoneNumber}</div>
+                                <div class="shipping-footer-address">${compAddress}</div>
+                                <div class="shipping-footer-tel">Tel:&nbsp;${compPhoneNumber}</div>
                             </div>
                         </body>
                     </html>

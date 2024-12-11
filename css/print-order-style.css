@@ -230,7 +230,7 @@ html {
   justify-content: space-between;
 }
 
-#shipping-body div {
+#shipping-body div{
   padding: 0px;
   margin: 0px;
 }
@@ -265,6 +265,10 @@ html {
   margin-bottom: 10px;
 }
 
+#order-detail .order-number-barcode {
+  margin-bottom: 5px;
+}
+
 #order-detail .order-number {
   margin-bottom: 20px;
 }
@@ -292,4 +296,14 @@ html {
   border-top: 1px solid #ddd;
   font-size: var(--shipping-base-font-size, 13px);
   padding-top: 10px;
+  line-height: 1.3;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+#shipping-footer .shipping-footer-address,
+#shipping-footer .shipping-footer-tel {
+  margin: 0px;
+  padding: 0px;
 }
