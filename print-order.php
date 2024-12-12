@@ -41,14 +41,14 @@ function wc_print_buttons_enqueue_scripts( $hook ) {
 
         // Pass ajaxurl and additional data to JavaScript
         wp_localize_script('wc-print-buttons-script', 'ajax_object', array(
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'plugin_url' => untrailingslashit(plugin_dir_url(__FILE__)), // Ensure no trailing slash
-            'comp_name' => $company_details['comp_name'],
-            'comp_address' => $company_details['comp_address'], 
-            'thankyou_message' => $company_details['thankyou_message'],
+            'ajaxurl'           => admin_url('admin-ajax.php'),
+            'plugin_url'        => untrailingslashit(plugin_dir_url(__FILE__)),
+            'comp_name'         => $company_details['comp_name'],
+            'comp_address'      => $company_details['comp_address'],
+            'thankyou_message'  => $company_details['thankyou_message'],
             'comp_phone_number' => $company_details['comp_phone_number'],
-            'comp_email_address' => $company_details['comp_email_address'],
-        ));
+            'comp_email_address'=> $company_details['comp_email_address'],
+        ));        
     }
 }
 add_action( 'admin_enqueue_scripts', 'wc_print_buttons_enqueue_scripts' );
@@ -77,8 +77,10 @@ function wc_print_buttons_meta_box_content() {
     global $post;
 
     // Check if this is the "Add New Order" page [LE1]
-    $current_url = $_SERVER['REQUEST_URI'];
-    $is_new_order_page = strpos( $current_url, 'post-new.php?post_type=shop_order' ) !== false;
+    /*$current_url = $_SERVER['REQUEST_URI'];
+    $is_new_order_page = strpos( $current_url, 'post-new.php?post_type=shop_order' ) !== false;*/
+    $current_screen = get_current_screen();
+    $is_new_order_page = $current_screen && $current_screen->base === 'shop_order' && $current_screen->action === 'add';
 
     if ( $is_new_order_page ) {
         echo '<p>This section is not available for new orders.</p>';
@@ -206,8 +208,10 @@ function handle_generate_invoice() {
     $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : 0;
 
     if ($order_id > 0) {
-        /*error_log('generate_invoice called');
-        error_log('Order ID: ' . $order_id);*/
+        /*if (WP_DEBUG) {
+            error_log('generate_shipping called');
+            error_log('Order ID: ' . $order_id);
+        }*/
 
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
@@ -320,12 +324,14 @@ add_action('wp_ajax_generate_invoice', 'handle_generate_invoice');
 
 // Handle AJAX request to generate the shipping label
 function handle_generate_shipping() {
-    if (isset($_POST['order_id'])) {
-        $order_id = intval($_POST['order_id']);
-        $order = wc_get_order($order_id);
+    // Check for required data (order ID)
+    $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : 0;
 
-        error_log('generate_shipping called');
-        error_log('Order ID: ' . $order_id);
+    if ($order_id > 0) {
+        /*if (WP_DEBUG) {
+            error_log('generate_shipping called');
+            error_log('Order ID: ' . $order_id);
+        }*/
 
         // Get the WooCommerce order object
         $order = wc_get_order($order_id);
@@ -342,18 +348,18 @@ function handle_generate_shipping() {
         $barcode_data_uri = get_order_barcode($order_id);
         $order_number_barcode_URL = esc_attr($barcode_data_uri);
 
-        $shipping_address = $order_details['shipping_address'];
-        $shipping_name = $order_details['shipping_name'];
-        $shipping_address_line = $order_details['shipping_address_line'];
-        $shipping_city = $order_details['shipping_city'];
-        $shipping_state_zip =  $order_details['shipping_state_zip'];
-        $phone_number = $order_details['phone_number'];
-        $order_date = $order_details['order_date'];
-        $payment_method = $order_details['payment_method_title'];
-        $customer_note = $order_details['customer_note'];
+        $shipping_address = esc_html($order_details['shipping_address']);
+        $shipping_name = esc_html($order_details['shipping_name']);
+        $shipping_address_line = esc_html($order_details['shipping_address_line']);
+        $shipping_city = esc_html($order_details['shipping_city']);
+        $shipping_state_zip = esc_html($order_details['shipping_state_zip']);
+        $phone_number = esc_html($order_details['phone_number']);
+        $order_date = esc_html($order_details['order_date']);
+        $payment_method = esc_html($order_details['payment_method_title']);
+        $customer_note = esc_html($order_details['customer_note']);
 
         // Get the total amount with comma separation
-        $total_amount = number_format($order->get_total(), 0); // Formats the amount with two decimal places and commas
+        $total_amount = number_format($order->get_total(), 0); // Formats the amount with zero decimal places and commas
 
         // Prepare the response
         $response = array(
