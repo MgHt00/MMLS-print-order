@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MMLS Print Order
  * Description: Enhances WooCommerce by adding customizable "Print Invoice" and "Print Shipping" buttons directly to the order management page. Generate clean, professional invoices and shipping labels with order details and company branding, ready for printing.
- * Version: 1.0
+ * Version: 1.2
  * Author: Win Htoo Shwe, OpenAI's ChatGPT (Code Assistance)
  */
 
@@ -192,14 +192,27 @@ function get_order_details($order) {
 
 // Helper function to generate barcode dynamically and output it directly as a data URI
 function get_order_barcode($order_id) {
-    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-    $barcode = $generator->getBarcode($order_id, $generator::TYPE_CODE_128);
+    try {
+        $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcode = $generator->getBarcode($order_id, $generator::TYPE_CODE_128);
 
-    // Encode the barcode as a Base64 string
-    $barcode_base64 = base64_encode($barcode);
+        // Check if barcode generation returned valid data
+        if (!$barcode) {
+            throw new Exception('Failed to generate barcode.');
+        }
 
-    // Return the Base64 image
-    return 'data:image/png;base64,' . $barcode_base64;
+        // Encode the barcode as a Base64 string
+        $barcode_base64 = base64_encode($barcode);
+
+        // Return the Base64 image
+        return 'data:image/png;base64,' . $barcode_base64;
+    } catch (Exception $e) {
+        // Log the error for debugging
+        error_log('Barcode generation error: ' . $e->getMessage());
+
+        // Return a placeholder image or an error message
+        return 'data:image/png;base64,' . base64_encode(''); // Return an empty PNG placeholder
+    }
 }
 
 // Handle AJAX request to generate the invoice

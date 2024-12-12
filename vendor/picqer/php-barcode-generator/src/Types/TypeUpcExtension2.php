@@ -14,26 +14,26 @@ use Picqer\Barcode\Helpers\BinarySequenceConverter;
 
 class TypeUpcExtension2 implements TypeInterface
 {
-    protected int $length = 2;
+    protected $length = 2;
 
-    public function getBarcode(string $code): Barcode
+    public function getBarcodeData(string $code): Barcode
     {
         $len = $this->length;
 
-        // Padding
+        //Padding
         $code = str_pad($code, $len, '0', STR_PAD_LEFT);
 
-        // Calculate check digit
+        // calculate check digit
         if ($len == 2) {
-            $r = (int)$code % 4;
+            $r = $code % 4;
         } elseif ($len == 5) {
-            $r = (3 * intval($code[0] . $code[2] . $code[4])) + (9 * intval($code[1] . $code[3]));
+            $r = (3 * ($code[0] + $code[2] + $code[4])) + (9 * ($code[1] + $code[3]));
             $r %= 10;
         } else {
             throw new InvalidCheckDigitException();
         }
 
-        // Convert digits to bars
+        //Convert digits to bars
         $codes = [
             'A' => [ // left odd parity
                 '0' => '0001101',

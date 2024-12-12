@@ -14,9 +14,8 @@ use Picqer\Barcode\Exceptions\InvalidCharacterException;
 
 class TypeInterleaved25Checksum implements TypeInterface
 {
-    public function getBarcode(string $code): Barcode
+    public function getBarcodeData(string $code): Barcode
     {
-        $chr = [];
         $chr['0'] = '11221';
         $chr['1'] = '21112';
         $chr['2'] = '12112';
@@ -37,7 +36,6 @@ class TypeInterleaved25Checksum implements TypeInterface
             // add leading zero if code-length is odd
             $code = '0' . $code;
         }
-
         // add start and stop codes
         $code = 'AA' . strtolower($code) . 'ZA';
 
@@ -62,7 +60,7 @@ class TypeInterleaved25Checksum implements TypeInterface
                 } else {
                     $t = false; // space
                 }
-                $w = intval($seq[$j]);
+                $w = $seq[$j];
                 $barcode->addBar(new BarcodeBar($w, 1, $t));
             }
         }
@@ -75,17 +73,17 @@ class TypeInterleaved25Checksum implements TypeInterface
         $len = strlen($code);
         $sum = 0;
         for ($i = 0; $i < $len; $i += 2) {
-            $sum += intval($code[$i]);
+            $sum += $code[$i];
         }
         $sum *= 3;
         for ($i = 1; $i < $len; $i += 2) {
-            $sum += intval($code[$i]);
+            $sum += ($code[$i]);
         }
         $r = $sum % 10;
         if ($r > 0) {
             $r = (10 - $r);
         }
 
-        return (string)$r;
+        return $r;
     }
 }

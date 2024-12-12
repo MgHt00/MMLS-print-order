@@ -4,7 +4,6 @@ namespace Picqer\Barcode\Types;
 
 use Picqer\Barcode\Barcode;
 use Picqer\Barcode\BarcodeBar;
-use Picqer\Barcode\Exceptions\BarcodeException;
 use Picqer\Barcode\Exceptions\InvalidCharacterException;
 use Picqer\Barcode\Exceptions\InvalidLengthException;
 
@@ -18,9 +17,9 @@ use Picqer\Barcode\Exceptions\InvalidLengthException;
 
 class TypeCode128 implements TypeInterface
 {
-    protected ?string $type = null;
+    protected $type = null;
 
-    protected array $conversionTable = [
+    protected $conversionTable = [
         '212222', /* 00 */
         '222122', /* 01 */
         '222221', /* 02 */
@@ -131,7 +130,7 @@ class TypeCode128 implements TypeInterface
         '200000'  /* END */
     ];
 
-    public function getBarcode(string $code): Barcode
+    public function getBarcodeData(string $code): Barcode
     {
         if (strlen(trim($code)) === 0) {
             throw new InvalidLengthException('You should provide a barcode string.');
@@ -165,7 +164,7 @@ class TypeCode128 implements TypeInterface
                     $char_id = ord($char);
                     if (($char_id >= 241) AND ($char_id <= 244)) {
                         $code_data[] = $fnc_a[$char_id];
-                    } elseif ($char_id <= 95) {
+                    } elseif (($char_id >= 0) AND ($char_id <= 95)) {
                         $code_data[] = strpos($keys_a, $char);
                     } else {
                         throw new InvalidCharacterException('Char ' . $char . ' is unsupported');
@@ -214,7 +213,7 @@ class TypeCode128 implements TypeInterface
                 // get numeric sequences (if any)
                 $numseq = [];
                 preg_match_all('/([0-9]{4,})/', $code, $numseq, PREG_OFFSET_CAPTURE);
-                if (! empty($numseq[1])) {
+                if (isset($numseq[1]) AND ! empty($numseq[1])) {
                     $end_offset = 0;
                     foreach ($numseq[1] as $val) {
                         $offset = $val[1];
@@ -332,18 +331,11 @@ class TypeCode128 implements TypeInterface
                                 $code_data[] = intval($chrnum);
                             }
                             break;
-
-                        default:
-                            throw new InvalidCharacterException('Do not support different mode then A, B or C.');
                     }
                 }
         }
 
         // calculate check character
-        if (! isset($startid)) {
-            throw new BarcodeException('Could not determine start char for barcode.');
-        }
-
         $sum = $startid;
         foreach ($code_data as $key => $val) {
             $sum += ($val * ($key + 1));
@@ -383,14 +375,14 @@ class TypeCode128 implements TypeInterface
      * @return array sequence
      * @protected
      */
-    protected function get128ABsequence($code): array
+    protected function get128ABsequence($code)
     {
         $len = strlen($code);
         $sequence = [];
         // get A sequences (if any)
         $numseq = [];
         preg_match_all('/([\x00-\x1f])/', $code, $numseq, PREG_OFFSET_CAPTURE);
-        if (empty($numseq[1])) {
+        if (isset($numseq[1]) AND ! empty($numseq[1])) {
             $end_offset = 0;
             foreach ($numseq[1] as $val) {
                 $offset = $val[1];

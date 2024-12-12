@@ -246,6 +246,7 @@ html {
 #shipping-body #order-detail {
   border-right: 1px solid #ddd;
   margin-right: 30px;
+  padding-right: 9px;
 }
 
 #order-detail {

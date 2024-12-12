@@ -9,15 +9,12 @@ namespace Picqer\Barcode\Types;
 
 use Picqer\Barcode\Barcode;
 use Picqer\Barcode\BarcodeBar;
-use Picqer\Barcode\Exceptions\InvalidCharacterException;
 use Picqer\Barcode\Exceptions\InvalidLengthException;
 
 class TypePharmacodeTwoCode implements TypeInterface
 {
-    public function getBarcode(string $code): Barcode
+    public function getBarcodeData(string $code): Barcode
     {
-        $originalCode = $code;
-
         $code = intval($code);
 
         if ($code < 1) {
@@ -47,7 +44,7 @@ class TypePharmacodeTwoCode implements TypeInterface
 
         $seq = strrev($seq);
 
-        $barcode = new Barcode($originalCode);
+        $barcode = new Barcode($code);
 
         for ($i = 0; $i < strlen($seq); ++$i) {
             switch ($seq[$i]) {
@@ -65,14 +62,11 @@ class TypePharmacodeTwoCode implements TypeInterface
                     $p = 0;
                     $h = 2;
                     break;
-
-                default:
-                    throw new InvalidCharacterException('Could not find bar for char.');
             }
 
-            $barcode->addBar(new BarcodeBar(1, $h, true, $p));
+            $barcode->addBar(new BarcodeBar(1, $h, 1, $p));
             if ($i < (strlen($seq) - 1)) {
-                $barcode->addBar(new BarcodeBar(1, 2, false, 0));
+                $barcode->addBar(new BarcodeBar(1, 2, 0, 0));
             }
         }
 

@@ -45,10 +45,8 @@ use Picqer\Barcode\Types\TypeCode93;
 use Picqer\Barcode\Types\TypeEan13;
 use Picqer\Barcode\Types\TypeEan8;
 use Picqer\Barcode\Types\TypeIntelligentMailBarcode;
-use Picqer\Barcode\Types\TypeInterface;
 use Picqer\Barcode\Types\TypeInterleaved25;
 use Picqer\Barcode\Types\TypeInterleaved25Checksum;
-use Picqer\Barcode\Types\TypeITF14;
 use Picqer\Barcode\Types\TypeKix;
 use Picqer\Barcode\Types\TypeMsi;
 use Picqer\Barcode\Types\TypeMsiChecksum;
@@ -59,7 +57,6 @@ use Picqer\Barcode\Types\TypePostnet;
 use Picqer\Barcode\Types\TypeRms4cc;
 use Picqer\Barcode\Types\TypeStandard2of5;
 use Picqer\Barcode\Types\TypeStandard2of5Checksum;
-use Picqer\Barcode\Types\TypeTelepen;
 use Picqer\Barcode\Types\TypeUpcA;
 use Picqer\Barcode\Types\TypeUpcE;
 use Picqer\Barcode\Types\TypeUpcExtension2;
@@ -77,7 +74,6 @@ abstract class BarcodeGenerator
     const TYPE_STANDARD_2_5_CHECKSUM = 'S25+';
     const TYPE_INTERLEAVED_2_5 = 'I25';
     const TYPE_INTERLEAVED_2_5_CHECKSUM = 'I25+';
-    const TYPE_ITF_14 = 'ITF14';
     const TYPE_CODE_128 = 'C128';
     const TYPE_CODE_128_A = 'C128A';
     const TYPE_CODE_128_B = 'C128B';
@@ -92,8 +88,6 @@ abstract class BarcodeGenerator
     const TYPE_MSI_CHECKSUM = 'MSI+'; // MSI + CHECKSUM (modulo 11)
     const TYPE_POSTNET = 'POSTNET';
     const TYPE_PLANET = 'PLANET';
-    const TYPE_TELEPEN_ALPHA = 'TELEPENALPHA';
-    const TYPE_TELEPEN_NUMERIC = 'TELEPENNUMERIC';
     const TYPE_RMS4CC = 'RMS4CC'; // RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)
     const TYPE_KIX = 'KIX'; // KIX (Klant index - Customer index)
     const TYPE_IMB = 'IMB'; // IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200
@@ -102,17 +96,14 @@ abstract class BarcodeGenerator
     const TYPE_PHARMA_CODE = 'PHARMA';
     const TYPE_PHARMA_CODE_TWO_TRACKS = 'PHARMA2T';
 
-    /**
-     * @throws UnknownTypeException
-     */
     protected function getBarcodeData(string $code, string $type): Barcode
     {
         $barcodeDataBuilder = $this->createDataBuilderForType($type);
 
-        return $barcodeDataBuilder->getBarcode($code);
+        return $barcodeDataBuilder->getBarcodeData($code);
     }
 
-    protected function createDataBuilderForType(string $type): TypeInterface
+    protected function createDataBuilderForType(string $type)
     {
         switch (strtoupper($type)) {
             case self::TYPE_CODE_32:
@@ -144,9 +135,6 @@ abstract class BarcodeGenerator
 
             case self::TYPE_INTERLEAVED_2_5_CHECKSUM:
                 return new TypeInterleaved25Checksum();
-
-            case self::TYPE_ITF_14:
-                return new TypeITF14();
 
             case self::TYPE_CODE_128:
                 return new TypeCode128();
@@ -210,13 +198,6 @@ abstract class BarcodeGenerator
 
             case self::TYPE_PHARMA_CODE_TWO_TRACKS:
                 return new TypePharmacodeTwoCode();
-            
-            case self::TYPE_TELEPEN_ALPHA:
-                return new TypeTelepen();
-            
-            case self::TYPE_TELEPEN_NUMERIC:
-                return new TypeTelepen('numeric');
-            
         }
 
         throw new UnknownTypeException();
